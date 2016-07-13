@@ -38,34 +38,83 @@ import com.google.common.collect.Lists;
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
+		System.out.println("Reading data...");
 		List<DataSample> trainingData = readData(true);
 		List<DataSample> finalTrainingData = new ArrayList<DataSample>(trainingData);
+		System.out.println("Finished reading data...");
 		
 		DecisionTree tree = new DecisionTree();
 
 		List<Feature> features = getFeatures();
 
+		System.out.println("Training model...");
 		tree.train(finalTrainingData, features);
+		System.out.println("Finished training model...");
 
 		// print tree after training
 		tree.printTree();
 
 //		// read test data
-//		List<DataSample> testingData = readData(false);
-//		List<String> predictions = Lists.newArrayList();
+		System.out.println("Predicting results...");
+		List<DataSample> testingData = readData(false);
+		List<String> predictions = Lists.newArrayList();
 //		// classify all test data
-//		for (DataSample dataSample : testingData) {
-//			predictions.add(dataSample.getValue("PassengerId").get() + "," + tree.classify(dataSample).getPrintValue());
-//		}
+		for (DataSample dataSample : testingData) {
+			predictions.add(dataSample.getValue("duration").get() + "," + 
+					dataSample.getValue("protocol_type").get() + "," + 
+					dataSample.getValue("service").get() + "," + 
+					dataSample.getValue("flag").get() + "," + 
+					dataSample.getValue("source_bytes").get() + "," + 
+					dataSample.getValue("destination_bytes").get() + "," + 
+					dataSample.getValue("land").get() + "," + 
+					dataSample.getValue("wrong_fragment").get() + "," + 
+					dataSample.getValue("urgent").get() + "," + 
+					dataSample.getValue("hot").get() + "," + 
+					dataSample.getValue("failed_logins").get() + "," + 
+					dataSample.getValue("logged_in").get() + "," + 
+					dataSample.getValue("compromised").get() + "," + 
+					dataSample.getValue("root_shell").get() + "," + 
+					dataSample.getValue("su_attempted").get() + "," + 
+					dataSample.getValue("root").get() + "," + 
+					dataSample.getValue("file_creations").get() + "," + 
+					dataSample.getValue("shells").get() + "," +
+					dataSample.getValue("access_files").get() + "," +
+					dataSample.getValue("outbound_cmds").get() + "," +
+					dataSample.getValue("is_hot_logins").get() + "," +
+					dataSample.getValue("is_guest_login").get() + "," +
+					dataSample.getValue("connection_count").get() + "," +
+					dataSample.getValue("service_count").get() + "," +
+					dataSample.getValue("serror_rate").get() + "," +
+					dataSample.getValue("service_serror_rate").get() + "," +
+					dataSample.getValue("rerror_rate").get() + "," +
+					dataSample.getValue("service_rerror_rate").get() + "," +
+					dataSample.getValue("same_service_rate").get() + "," +
+					dataSample.getValue("diff_service_rate").get() + "," +
+					dataSample.getValue("service_diff_host_rate").get() + "," +
+					dataSample.getValue("destination_host_count").get() + "," +
+					dataSample.getValue("destination_host_service_count").get() + "," +
+					dataSample.getValue("destination_host_same_service_rate").get() + "," +
+					dataSample.getValue("destination_host_diff_service_rate").get() + "," +
+					dataSample.getValue("destination_host_same_source_port_rate").get() + "," +
+					dataSample.getValue("destination_host_service_diff_host_rate").get() + "," +
+					dataSample.getValue("destination_host_serror_rate").get() + "," +
+					dataSample.getValue("destination_host_service_serror_rate").get() + "," +
+					dataSample.getValue("destination_host_rerror_rate").get() + "," +
+					dataSample.getValue("destination_host_service_rerror_rate").get() + "," + 
+					tree.classify(dataSample).getPrintValue());
+		}
+		System.out.println("Finished predicting results...");
 //
 //		// write predictions to file
-//		FileWriter fileWriter = new FileWriter(new File("predictions.csv"));
-//		fileWriter.append("PassengerId,Survived").append("\n");
-//		for (String prediction : predictions) {
-//			fileWriter.append(prediction).append("\n");
-//		}
-//		fileWriter.flush();
-//		fileWriter.close();
+		System.out.println("Writing predictions to file...");
+		FileWriter fileWriter = new FileWriter(new File("predictions.csv"));
+		fileWriter.append("duration,protocol_type,service,flag,source_bytes,destination_bytes,land,wrong_fragment,urgent,hot,failed_logins,logged_in,compromised,root_shell,su_attempted,root,file_creations,shells,access_files,outbound_cmds,is_hot_logins,is_guest_login,connection_count,service_count,serror_rate,service_serror_rate,rerror_rate,service_rerror_rate,same_service_rate,diff_service_rate,service_diff_host_rate,destination_host_count,destination_host_service_count,destination_host_same_service_rate,destination_host_diff_service_rate,destination_host_same_source_port_rate,destination_host_service_diff_host_rate,destination_host_serror_rate,destination_host_service_serror_rate,destination_host_rerror_rate,destination_host_service_rerror_rate,class").append("\n");
+		for (String prediction : predictions) {
+			fileWriter.append(prediction).append("\n");
+		}
+		fileWriter.flush();
+		fileWriter.close();
+		System.out.println("Finished writing predictions to file...");
 
 	}
 
@@ -348,8 +397,8 @@ public class Main {
 
 			List<Object> values;
 			while ((values = listReader.read(getProcessors(training))) != null) {
-				 System.out.println(String.format("lineNo=%s, rowNo=%s,data=%s", listReader.getLineNumber(),
-				 listReader.getRowNumber(), values));
+//				 System.out.println(String.format("lineNo=%s, rowNo=%s,data=%s", listReader.getLineNumber(),
+//				 listReader.getRowNumber(), values));
 				data.add(SimpleDataSample.newSimpleDataSample("class", header, values.toArray()));
 			}
 		}
@@ -394,8 +443,7 @@ public class Main {
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
-					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
-					new Optional(new ParseStringLabel())
+					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble())
 					};
 			return processors;
 		}
