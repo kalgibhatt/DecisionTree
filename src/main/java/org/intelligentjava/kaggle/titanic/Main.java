@@ -4,12 +4,9 @@ import static org.intelligentjava.machinelearning.decisiontree.feature.P.between
 import static org.intelligentjava.machinelearning.decisiontree.feature.P.lessThanD;
 import static org.intelligentjava.machinelearning.decisiontree.feature.P.moreThan;
 import static org.intelligentjava.machinelearning.decisiontree.feature.P.moreThanD;
-import static org.intelligentjava.machinelearning.decisiontree.feature.P.startsWith;
 import static org.intelligentjava.machinelearning.decisiontree.feature.PredicateFeature.newFeature;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -40,81 +37,103 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		System.out.println("Reading data...");
 		List<DataSample> trainingData = readData(true);
-		List<DataSample> finalTrainingData = new ArrayList<DataSample>(trainingData);
 		System.out.println("Finished reading data...");
-		
+
 		DecisionTree tree = new DecisionTree();
 
 		List<Feature> features = getFeatures();
 
 		System.out.println("Training model...");
-		tree.train(finalTrainingData, features);
+		tree.train(trainingData, features);
 		System.out.println("Finished training model...");
 
 		// print tree after training
 		tree.printTree();
 
-//		// read test data
+		// // read test data
 		System.out.println("Predicting results...");
+
 		List<DataSample> testingData = readData(false);
-		List<String> predictions = Lists.newArrayList();
-//		// classify all test data
+//		List<String> predictions = Lists.newArrayList();
+
+		double totalDataCount = testingData.size();
+		double totalCorrectPredictions = 0;
 		for (DataSample dataSample : testingData) {
-			predictions.add(dataSample.getValue("duration").get() + "," + 
-					dataSample.getValue("protocol_type").get() + "," + 
-					dataSample.getValue("service").get() + "," + 
-					dataSample.getValue("flag").get() + "," + 
-					dataSample.getValue("source_bytes").get() + "," + 
-					dataSample.getValue("destination_bytes").get() + "," + 
-					dataSample.getValue("land").get() + "," + 
-					dataSample.getValue("wrong_fragment").get() + "," + 
-					dataSample.getValue("urgent").get() + "," + 
-					dataSample.getValue("hot").get() + "," + 
-					dataSample.getValue("failed_logins").get() + "," + 
-					dataSample.getValue("logged_in").get() + "," + 
-					dataSample.getValue("compromised").get() + "," + 
-					dataSample.getValue("root_shell").get() + "," + 
-					dataSample.getValue("su_attempted").get() + "," + 
-					dataSample.getValue("root").get() + "," + 
-					dataSample.getValue("file_creations").get() + "," + 
-					dataSample.getValue("shells").get() + "," +
-					dataSample.getValue("access_files").get() + "," +
-					dataSample.getValue("outbound_cmds").get() + "," +
-					dataSample.getValue("is_hot_logins").get() + "," +
-					dataSample.getValue("is_guest_login").get() + "," +
-					dataSample.getValue("connection_count").get() + "," +
-					dataSample.getValue("service_count").get() + "," +
-					dataSample.getValue("serror_rate").get() + "," +
-					dataSample.getValue("service_serror_rate").get() + "," +
-					dataSample.getValue("rerror_rate").get() + "," +
-					dataSample.getValue("service_rerror_rate").get() + "," +
-					dataSample.getValue("same_service_rate").get() + "," +
-					dataSample.getValue("diff_service_rate").get() + "," +
-					dataSample.getValue("service_diff_host_rate").get() + "," +
-					dataSample.getValue("destination_host_count").get() + "," +
-					dataSample.getValue("destination_host_service_count").get() + "," +
-					dataSample.getValue("destination_host_same_service_rate").get() + "," +
-					dataSample.getValue("destination_host_diff_service_rate").get() + "," +
-					dataSample.getValue("destination_host_same_source_port_rate").get() + "," +
-					dataSample.getValue("destination_host_service_diff_host_rate").get() + "," +
-					dataSample.getValue("destination_host_serror_rate").get() + "," +
-					dataSample.getValue("destination_host_service_serror_rate").get() + "," +
-					dataSample.getValue("destination_host_rerror_rate").get() + "," +
-					dataSample.getValue("destination_host_service_rerror_rate").get() + "," + 
-					tree.classify(dataSample).getPrintValue());
+			int actualClass = Integer.parseInt(dataSample.getValue("class").get().toString());
+			int predictedClass = Integer.parseInt(tree.classify(dataSample).getPrintValue());
+			if (actualClass == predictedClass) {
+				totalCorrectPredictions++;
+			}
 		}
-		System.out.println("Finished predicting results...");
-//
-//		// write predictions to file
-		System.out.println("Writing predictions to file...");
-		FileWriter fileWriter = new FileWriter(new File("predictions.csv"));
-		fileWriter.append("duration,protocol_type,service,flag,source_bytes,destination_bytes,land,wrong_fragment,urgent,hot,failed_logins,logged_in,compromised,root_shell,su_attempted,root,file_creations,shells,access_files,outbound_cmds,is_hot_logins,is_guest_login,connection_count,service_count,serror_rate,service_serror_rate,rerror_rate,service_rerror_rate,same_service_rate,diff_service_rate,service_diff_host_rate,destination_host_count,destination_host_service_count,destination_host_same_service_rate,destination_host_diff_service_rate,destination_host_same_source_port_rate,destination_host_service_diff_host_rate,destination_host_serror_rate,destination_host_service_serror_rate,destination_host_rerror_rate,destination_host_service_rerror_rate,class").append("\n");
-		for (String prediction : predictions) {
-			fileWriter.append(prediction).append("\n");
-		}
-		fileWriter.flush();
-		fileWriter.close();
-		System.out.println("Finished writing predictions to file...");
+
+		System.out.println("Accuracy: " + totalCorrectPredictions / totalDataCount * 100);
+
+		// // // classify all test data
+		// for (DataSample dataSample : testingData) {
+		// predictions.add(dataSample.getValue("duration").get() + "," +
+		// dataSample.getValue("protocol_type").get()
+		// + "," + dataSample.getValue("service").get() + "," +
+		// dataSample.getValue("flag").get() + ","
+		// + dataSample.getValue("source_bytes").get() + "," +
+		// dataSample.getValue("destination_bytes").get()
+		// + "," + dataSample.getValue("land").get() + "," +
+		// dataSample.getValue("wrong_fragment").get() + ","
+		// + dataSample.getValue("urgent").get() + "," +
+		// dataSample.getValue("hot").get() + ","
+		// + dataSample.getValue("failed_logins").get() + "," +
+		// dataSample.getValue("logged_in").get() + ","
+		// + dataSample.getValue("compromised").get() + "," +
+		// dataSample.getValue("root_shell").get() + ","
+		// + dataSample.getValue("su_attempted").get() + "," +
+		// dataSample.getValue("root").get() + ","
+		// + dataSample.getValue("file_creations").get() + "," +
+		// dataSample.getValue("shells").get() + ","
+		// + dataSample.getValue("access_files").get() + "," +
+		// dataSample.getValue("outbound_cmds").get() + ","
+		// + dataSample.getValue("is_hot_logins").get() + "," +
+		// dataSample.getValue("is_guest_login").get()
+		// + "," + dataSample.getValue("connection_count").get() + ","
+		// + dataSample.getValue("service_count").get() + "," +
+		// dataSample.getValue("serror_rate").get() + ","
+		// + dataSample.getValue("service_serror_rate").get() + "," +
+		// dataSample.getValue("rerror_rate").get()
+		// + "," + dataSample.getValue("service_rerror_rate").get() + ","
+		// + dataSample.getValue("same_service_rate").get() + ","
+		// + dataSample.getValue("diff_service_rate").get() + ","
+		// + dataSample.getValue("service_diff_host_rate").get() + ","
+		// + dataSample.getValue("destination_host_count").get() + ","
+		// + dataSample.getValue("destination_host_service_count").get() + ","
+		// + dataSample.getValue("destination_host_same_service_rate").get() +
+		// ","
+		// + dataSample.getValue("destination_host_diff_service_rate").get() +
+		// ","
+		// + dataSample.getValue("destination_host_same_source_port_rate").get()
+		// + ","
+		// +
+		// dataSample.getValue("destination_host_service_diff_host_rate").get()
+		// + ","
+		// + dataSample.getValue("destination_host_serror_rate").get() + ","
+		// + dataSample.getValue("destination_host_service_serror_rate").get() +
+		// ","
+		// + dataSample.getValue("destination_host_rerror_rate").get() + ","
+		// + dataSample.getValue("destination_host_service_rerror_rate").get() +
+		// ","
+		// + tree.classify(dataSample).getPrintValue());
+		// }
+		// System.out.println("Finished predicting results...");
+		// //
+		// // // write predictions to file
+		// System.out.println("Writing predictions to file...");
+		// FileWriter fileWriter = new FileWriter(new File("predictions.csv"));
+		// fileWriter
+		// .append("duration,protocol_type,service,flag,source_bytes,destination_bytes,land,wrong_fragment,urgent,hot,failed_logins,logged_in,compromised,root_shell,su_attempted,root,file_creations,shells,access_files,outbound_cmds,is_hot_logins,is_guest_login,connection_count,service_count,serror_rate,service_serror_rate,rerror_rate,service_rerror_rate,same_service_rate,diff_service_rate,service_diff_host_rate,destination_host_count,destination_host_service_count,destination_host_same_service_rate,destination_host_diff_service_rate,destination_host_same_source_port_rate,destination_host_service_diff_host_rate,destination_host_serror_rate,destination_host_service_serror_rate,destination_host_rerror_rate,destination_host_service_rerror_rate,class")
+		// .append("\n");
+		// for (String prediction : predictions) {
+		// fileWriter.append(prediction).append("\n");
+		// }
+		// fileWriter.flush();
+		// fileWriter.close();
+		// System.out.println("Finished writing predictions to file...");
 
 	}
 
@@ -352,8 +371,8 @@ public class Main {
 				isServiceSMTP, isServiceSql_net, isServiceSSH, isServiceSunrpc, isServiceSundup, isServiceSystat,
 				isServiceTelnet, isServiceTftp_u, isServiceTime, isServiceTim_i, isServiceUrh_i, isServiceUucp,
 				isServiceUucp_path, isServiceVmnet, isServiceWhois, isServiceX11, isServiceZ39_50, isFlagOTH, isFlagREJ,
-				isFlagRSTO, isFlagRSTOS0, isFlagRSTR, isFlagS0, isFlagS1, isFlagS2, isFlagS3, isFlagSF, isFlagSH
-				,sourceBytesSmall, sourceBytesMedium, sourceBytesLarge, destinationBytesSmall, destinationBytesMedium,
+				isFlagRSTO, isFlagRSTOS0, isFlagRSTR, isFlagS0, isFlagS1, isFlagS2, isFlagS3, isFlagSF, isFlagSH,
+				sourceBytesSmall, sourceBytesMedium, sourceBytesLarge, destinationBytesSmall, destinationBytesMedium,
 				destinationBytesLarge, land, notLand, noWrongFragment, oneWrongFragment, moreWrongFragments,
 				noUrgentPacket, oneUrgentPacket, moreUrgentPackets, lessHotIndicators, mediumHotIndicators,
 				moreHotIndicators, noFailedLoginAttempt, oneFailedLoginAttempt, twoFailedLoginAttempt,
@@ -380,8 +399,7 @@ public class Main {
 				mediumDestinationHostServiceSErrorRate, moreDestinationHostServiceSErrorRate,
 				lessDestinationHostRErrorRate, mediumDestinationHostRErrorRate, moreDestinationHostRErrorRate,
 				lessDestinationHostServiceRErrorRate, mediumDestinationHostServiceRErrorRate,
-				moreDestinationHostServiceRErrorRate
-				);
+				moreDestinationHostServiceRErrorRate);
 
 	}
 
@@ -397,54 +415,50 @@ public class Main {
 
 			List<Object> values;
 			while ((values = listReader.read(getProcessors(training))) != null) {
-//				 System.out.println(String.format("lineNo=%s, rowNo=%s,data=%s", listReader.getLineNumber(),
-//				 listReader.getRowNumber(), values));
+				// System.out.println(String.format("lineNo=%s,
+				// rowNo=%s,data=%s", listReader.getLineNumber(),
+				// listReader.getRowNumber(), values));
 				data.add(SimpleDataSample.newSimpleDataSample("class", header, values.toArray()));
 			}
 		}
-		return data;
+		List<DataSample> finalData = new ArrayList<DataSample>(data);
+		return finalData;
 	}
 
 	private static CellProcessor[] getProcessors(boolean training) {
 		// TODO fix this is ugly
 		if (training) {
 			final CellProcessor[] processors = new CellProcessor[] { new Optional(new ParseDouble()), new Optional(),
-					new Optional(), new Optional(), 
-					new Optional(new ParseDouble()), new Optional(new ParseDouble()),
+					new Optional(), new Optional(), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseBool()), new Optional(new ParseInt()), new Optional(new ParseInt()),
-					new Optional(new ParseDouble()), new Optional(new ParseInt()),
-					new Optional(new ParseBool()), new Optional(new ParseDouble()),
-					new Optional(new ParseBool()), new Optional(new ParseInt()),
+					new Optional(new ParseDouble()), new Optional(new ParseInt()), new Optional(new ParseBool()),
+					new Optional(new ParseDouble()), new Optional(new ParseBool()), new Optional(new ParseInt()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseInt()),
 					new Optional(new ParseInt()), new Optional(new ParseInt()), new Optional(new ParseInt()),
-					new Optional(new ParseBool()), new Optional(new ParseDouble()),
+					new Optional(new ParseBool()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
-					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
-					new Optional(new ParseStringLabel())
-					};
+					new Optional(new ParseDouble()), new Optional(new ParseDouble()),
+					new Optional(new ParseStringLabel()) };
 			return processors;
 		} else {
 			final CellProcessor[] processors = new CellProcessor[] { new Optional(new ParseDouble()), new Optional(),
-					new Optional(), new Optional(), 
-					new Optional(new ParseDouble()), new Optional(new ParseDouble()),
+					new Optional(), new Optional(), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseBool()), new Optional(new ParseInt()), new Optional(new ParseInt()),
-					new Optional(new ParseDouble()), new Optional(new ParseInt()),
-					new Optional(new ParseBool()), new Optional(new ParseDouble()),
-					new Optional(new ParseBool()), new Optional(new ParseInt()),
+					new Optional(new ParseDouble()), new Optional(new ParseInt()), new Optional(new ParseBool()),
+					new Optional(new ParseDouble()), new Optional(new ParseBool()), new Optional(new ParseInt()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseInt()),
 					new Optional(new ParseInt()), new Optional(new ParseInt()), new Optional(new ParseInt()),
-					new Optional(new ParseBool()), new Optional(new ParseDouble()),
+					new Optional(new ParseBool()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
 					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble()),
-					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseDouble())
-					};
+					new Optional(new ParseDouble()), new Optional(new ParseDouble()), new Optional(new ParseInt()) };
 			return processors;
 		}
 	}
@@ -457,7 +471,7 @@ public class Main {
 		}
 
 	}
-	
+
 	private static class ParseStringLabel extends ParseBool {
 
 		public Object execute(final Object value, final CsvContext context) {
