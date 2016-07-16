@@ -1,4 +1,4 @@
-package org.intelligentjava.machinelearning.decisiontree.label;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.label;
 
 /**
  * Simplest possible label. Simply labels data as true or false.
@@ -6,19 +6,15 @@ package org.intelligentjava.machinelearning.decisiontree.label;
  * @author Ignas
  *
  */
-public class BooleanLabel extends Label {
-    
-    public static final Label TRUE_LABEL = BooleanLabel.newLabel(true);
-
-    public static final Label FALSE_LABEL = BooleanLabel.newLabel(false);
+public class StringLabel extends Label {
     
     /** Label. */
-    private boolean label;
+    private String label;
     
     /**
      * Constructor.
      */
-    private BooleanLabel(boolean label) {
+    private StringLabel(String label) {
         super();
         this.label = label;
     }
@@ -28,7 +24,7 @@ public class BooleanLabel extends Label {
      */
     @Override
     public String getPrintValue() {
-        return label ? "1" : "0";
+        return label;
     }
 
     /**
@@ -42,8 +38,8 @@ public class BooleanLabel extends Label {
     /**
      * Static factory method.
      */
-    public static Label newLabel(Boolean label) {
-        return new BooleanLabel(label);
+    public static Label newLabel(String label) {
+        return new StringLabel(label);
     }
 
     /**
@@ -51,10 +47,7 @@ public class BooleanLabel extends Label {
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (label ? 1231 : 1237);
-        return result;
+        return label.hashCode();
     }
 
     /**
@@ -68,8 +61,8 @@ public class BooleanLabel extends Label {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        BooleanLabel other = (BooleanLabel) obj;
-        if (label != other.label)
+        StringLabel other = (StringLabel) obj;
+        if (label.equals(other.label))
             return false;
         return true;
     }
@@ -79,7 +72,7 @@ public class BooleanLabel extends Label {
      */
     @Override
     public String toString() {
-        return "BooleanLabel [label=" + label + "]";
+        return "StringLabel [label=" + label + "]";
     }
 
 }

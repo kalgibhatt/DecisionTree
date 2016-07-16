@@ -1,10 +1,10 @@
-package org.intelligentjava.machinelearning.decisiontree.impurity;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.intelligentjava.machinelearning.decisiontree.data.DataSample;
-import org.intelligentjava.machinelearning.decisiontree.label.Label;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
 
 /**
  * Gini index impurity calculation. Formula 2p(1 - p) - this is the expected error if we label examples in the leaf

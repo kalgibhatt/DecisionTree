@@ -1,4 +1,4 @@
-package org.intelligentjava.machinelearning.decisiontree;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -6,16 +6,14 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.intelligentjava.machinelearning.decisiontree.data.DataSample;
-import org.intelligentjava.machinelearning.decisiontree.data.SimpleDataSample;
-import org.intelligentjava.machinelearning.decisiontree.feature.Feature;
-import org.intelligentjava.machinelearning.decisiontree.impurity.GiniIndexImpurityCalculation;
-import org.intelligentjava.machinelearning.decisiontree.impurity.ImpurityCalculationMethod;
-import org.intelligentjava.machinelearning.decisiontree.label.Label;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.Feature;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity.GiniIndexImpurityCalculation;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity.ImpurityCalculationMethod;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
 
 /**
  * Decision tree implementation.
@@ -26,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class DecisionTree {
 
     /** Logger. */
-    private Logger log = LoggerFactory.getLogger(DecisionTree.class);
+//    private Logger log = LoggerFactory.getLogger(DecisionTree.class);
 
     /** Root node. */
     private Node root;
@@ -80,21 +78,21 @@ public class DecisionTree {
         Label currentNodeLabel = null;
         // if dataset already homogeneous enough (has label assigned) make this node a leaf
         if ((currentNodeLabel = getLabel(trainingData)) != null) {
-            log.debug("New leaf is created because data is homogeneous: {}", currentNodeLabel.getName());
+//            log.debug("New leaf is created because data is homogeneous: {}", currentNodeLabel.getName());
             return Node.newLeafNode(currentNodeLabel);
         }
         
         boolean stoppingCriteriaReached = features.isEmpty() || currentDepth >= maxDepth;
         if (stoppingCriteriaReached) {
             Label majorityLabel = getMajorityLabel(trainingData);
-            log.debug("New leaf is created because stopping criteria reached: {}", majorityLabel.getName());
+//            log.debug("New leaf is created because stopping criteria reached: {}", majorityLabel.getName());
             return Node.newLeafNode(majorityLabel);
         }
 
         Feature bestSplit = findBestSplitFeature(trainingData, features); // get best set of literals
-        log.debug("Best split found: {}", bestSplit.toString());
+//        log.debug("Best split found: {}", bestSplit.toString());
         List<List<DataSample>> splitData = bestSplit.split(trainingData);
-        log.debug("Data is split into sublists of sizes: {}", splitData.stream().map(List::size).collect(Collectors.toList()));
+//        log.debug("Data is split into sublists of sizes: {}", splitData.stream().map(List::size).collect(Collectors.toList()));
 
         // remove best split from features (TODO check if it is not slow)
         List<Feature> newFeatures = features.stream().filter(p -> !p.equals(bestSplit)).collect(toList());

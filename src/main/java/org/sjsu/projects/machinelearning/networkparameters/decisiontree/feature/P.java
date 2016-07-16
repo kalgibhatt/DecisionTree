@@ -1,4 +1,4 @@
-package org.intelligentjava.machinelearning.decisiontree.feature;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature;
 
 import java.util.function.Predicate;
 

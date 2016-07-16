@@ -1,9 +1,9 @@
-package org.intelligentjava.machinelearning.decisiontree.data;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.data;
 
 import java.util.Optional;
 
-import org.intelligentjava.machinelearning.decisiontree.feature.Feature;
-import org.intelligentjava.machinelearning.decisiontree.label.Label;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.Feature;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
 
 /**
  * Labeled training data sample.

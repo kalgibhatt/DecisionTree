@@ -1,10 +1,10 @@
-package org.intelligentjava.machinelearning.decisiontree.data;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.data;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.intelligentjava.machinelearning.decisiontree.label.Label;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;

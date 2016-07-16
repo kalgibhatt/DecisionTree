@@ -1,4 +1,4 @@
-package org.intelligentjava.machinelearning.decisiontree.utils;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.utils;
 
 import net.jafama.FastMath;
 

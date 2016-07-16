@@ -1,12 +1,12 @@
-package org.intelligentjava.machinelearning.decisiontree.impurity;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity;
 
-import static org.intelligentjava.machinelearning.decisiontree.utils.MathUtils.log2;
+import static org.sjsu.projects.machinelearning.networkparameters.decisiontree.utils.MathUtils.log2;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.intelligentjava.machinelearning.decisiontree.data.DataSample;
-import org.intelligentjava.machinelearning.decisiontree.label.Label;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
+import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
 
 /**
  * Entropy calculator. -p log2 p - (1 - p)log2(1 - p) - this is the expected information, in bits, conveyed by somebody

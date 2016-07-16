@@ -1,4 +1,4 @@
-package org.intelligentjava.machinelearning.decisiontree.label;
+package org.sjsu.projects.machinelearning.networkparameters.decisiontree.label;
 
 /**
  * Label interface. Done as abstract class to force overriding of equals and hashCode methods.
