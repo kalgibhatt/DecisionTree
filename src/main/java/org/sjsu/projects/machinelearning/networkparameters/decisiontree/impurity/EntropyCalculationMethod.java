@@ -13,7 +13,8 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.La
  * telling you the class of a randomly drawn example; the purer the set of examples, the more predictable this message
  * becomes and the smaller the expected information.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class EntropyCalculationMethod implements ImpurityCalculationMethod {

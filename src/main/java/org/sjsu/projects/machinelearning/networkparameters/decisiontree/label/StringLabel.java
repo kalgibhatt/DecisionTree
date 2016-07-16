@@ -1,9 +1,10 @@
 package org.sjsu.projects.machinelearning.networkparameters.decisiontree.label;
 
 /**
- * Simplest possible label. Simply labels data as true or false.
+ * String label to classify the flows into different categories
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class StringLabel extends Label {

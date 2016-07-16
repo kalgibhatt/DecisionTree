@@ -7,6 +7,14 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.La
 
 import com.google.common.collect.Lists;
 
+/**
+ * Decision tree node implementation.
+ * 
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
+ *
+ */
+
 public class Node {
     
     private static final String LEAF_NODE_NAME = "Leaf";

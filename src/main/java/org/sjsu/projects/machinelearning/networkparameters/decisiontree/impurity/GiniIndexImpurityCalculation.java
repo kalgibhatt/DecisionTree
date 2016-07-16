@@ -11,7 +11,8 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.La
  * randomly: positive with probability p and negative with probability 1 - p. The probability of a false positive is
  * then p(1 - p) and the probability of a false negative (1 - p)p.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class GiniIndexImpurityCalculation implements ImpurityCalculationMethod {

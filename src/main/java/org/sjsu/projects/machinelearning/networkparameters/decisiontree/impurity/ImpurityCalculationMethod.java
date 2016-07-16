@@ -13,7 +13,8 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.La
  * 
  * Annotated as functional interface to allow lambda usage.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 @FunctionalInterface

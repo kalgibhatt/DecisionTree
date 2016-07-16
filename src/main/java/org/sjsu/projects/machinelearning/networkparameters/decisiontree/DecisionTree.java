@@ -18,7 +18,8 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.La
 /**
  * Decision tree implementation.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class DecisionTree {

@@ -3,7 +3,8 @@ package org.sjsu.projects.machinelearning.networkparameters.decisiontree.label;
 /**
  * Simplest possible label. Simply labels data as true or false.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class BooleanLabel extends Label {

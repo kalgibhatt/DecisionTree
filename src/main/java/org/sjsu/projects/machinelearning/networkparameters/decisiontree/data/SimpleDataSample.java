@@ -12,7 +12,8 @@ import com.google.common.collect.Maps;
 /**
  * Simple {@link DataSample} implementation which uses {@link HashMap} to keep data in columns.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class SimpleDataSample implements DataSample {

@@ -8,7 +8,8 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.Dat
 /**
  * Feature type that splits data into 2 sublists - one that 
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  * @param <T> Feature data type (string, number)
  */

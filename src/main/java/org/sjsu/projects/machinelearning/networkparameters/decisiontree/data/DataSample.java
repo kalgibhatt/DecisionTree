@@ -8,7 +8,8 @@ import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.La
 /**
  * Labeled training data sample.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public interface DataSample {

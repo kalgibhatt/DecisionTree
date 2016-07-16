@@ -3,7 +3,8 @@ package org.sjsu.projects.machinelearning.networkparameters.decisiontree.label;
 /**
  * Label interface. Done as abstract class to force overriding of equals and hashCode methods.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public abstract class Label {

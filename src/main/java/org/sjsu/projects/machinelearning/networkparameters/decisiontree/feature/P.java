@@ -5,7 +5,8 @@ import java.util.function.Predicate;
 /**
  * Convenience class for various predicates.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public class P {

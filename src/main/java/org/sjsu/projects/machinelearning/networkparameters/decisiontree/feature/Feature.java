@@ -12,7 +12,8 @@ import com.google.common.collect.Lists;
 /**
  * Feature interface. Each data sample either have or does not have a feature and it can be split based on that.
  * 
- * @author Ignas
+ * @author Keyur Golani
+ * @author Kalgi Bhatt
  *
  */
 public interface Feature {
