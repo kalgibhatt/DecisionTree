@@ -49,6 +49,14 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/jafaran.jar</systemPath>
 		</dependency>
+		
+		<dependency>
+			<groupId>spiffy</groupId>
+			<artifactId>spiffy</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/spiffy-0.05.jar</systemPath>
+		</dependency>
 
 	</dependencies>
 
