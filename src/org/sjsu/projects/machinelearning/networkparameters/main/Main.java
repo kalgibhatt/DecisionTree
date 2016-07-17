@@ -2,6 +2,7 @@ package main;
 
 import static decisiontree.feature.PredicateFeature.*;
 import static decisiontree.feature.P.*;
+import static logger.Logger.log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,34 +35,34 @@ public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		
-//		System.out.println("Randomly deciding the features to use...");
+//		log("Randomly deciding the features to use...");
 		
 //		List<String> labels = randomlySelectFeatures();
 		
-		System.out.println("Reading data...");
+		log("Reading data...");
 		List<DataSample> trainingData = readData(true);
-		System.out.println("Training Data Count: " + trainingData.size());
-		System.out.println("Finished reading data...");
+		log("Training Data Count: " + trainingData.size());
+		log("Finished reading data...");
 
 		DecisionTree tree = new DecisionTree();
 
 		List<Feature> features = getFeatures();
 
-		System.out.println("Training model...");
+		log("Training model...");
 		tree.train(trainingData, features);
-		System.out.println("Finished training model...");
+		log("Finished training model...");
 
 		// print tree after training
 		tree.printTree();
 
 		// read test data
-		System.out.println("Predicting results...");
+		log("Predicting results...");
 
 		List<DataSample> testingData = readData(false);
 //		 List<String> predictions = Lists.newArrayList();
-		System.out.println("Testing Data Count: " + testingData.size());
+		log("Testing Data Count: " + testingData.size());
 
-		System.out.println(calculateAccuracy(testingData, tree).toString());
+		log(calculateAccuracy(testingData, tree).toString());
 
 		// classify all test data
 		// for (DataSample dataSample : testingData) {
@@ -115,10 +116,10 @@ public class Main {
 		// ","
 		// + tree.classify(dataSample).getPrintValue());
 		// }
-		// System.out.println("Finished predicting results...");
+		// log("Finished predicting results...");
 		// //
 		// // // write predictions to file
-		// System.out.println("Writing predictions to file...");
+		// log("Writing predictions to file...");
 		// FileWriter fileWriter = new FileWriter(new File("predictions.csv"));
 		// fileWriter
 		// .append("duration,protocol_type,service,flag,source_bytes,destination_bytes,land,wrong_fragment,urgent,hot,failed_logins,logged_in,compromised,root_shell,su_attempted,root,file_creations,shells,access_files,outbound_cmds,is_hot_logins,is_guest_login,connection_count,service_count,serror_rate,service_serror_rate,rerror_rate,service_rerror_rate,same_service_rate,diff_service_rate,service_diff_host_rate,destination_host_count,destination_host_service_count,destination_host_same_service_rate,destination_host_diff_service_rate,destination_host_same_source_port_rate,destination_host_service_diff_host_rate,destination_host_serror_rate,destination_host_service_serror_rate,destination_host_rerror_rate,destination_host_service_rerror_rate,class")
@@ -128,7 +129,7 @@ public class Main {
 		// }
 		// fileWriter.flush();
 		// fileWriter.close();
-		// System.out.println("Finished writing predictions to file...");
+		// log("Finished writing predictions to file...");
 
 	}
 
@@ -655,7 +656,7 @@ public class Main {
 
 			List<Object> values;
 			while ((values = listReader.read(getProcessors(training))) != null) {
-				// System.out.println(String.format("lineNo=%s,
+				// log(String.format("lineNo=%s,
 				// rowNo=%s,data=%s", listReader.getLineNumber(),
 				// listReader.getRowNumber(), values));
 				data.add(SimpleDataSample.newSimpleDataSample("class", header, values.toArray()));

@@ -3,6 +3,8 @@ package decisiontree;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static logger.Logger.log;
+import static logger.Logger.logAppend;
 
 import java.util.List;
 import java.util.Map;
@@ -196,24 +198,24 @@ public class DecisionTree {
 
     private void printNodeValue(Node node) {
         if (node.isLeaf()) {
-            System.out.print(node.getLabel());
+            logAppend(node.getLabel());
         } else {
-            System.out.print(node.getName());
+            logAppend(node.getName());
         }
-        System.out.println();
+        log();
     }
 
     private void printTree(Node node, boolean isRight, String indent) {
         if (!node.getChildren().isEmpty() && node.getChildren().get(0) != null) {
             printTree(node.getChildren().get(0), true, indent + (isRight ? "        " : " |      "));
         }
-        System.out.print(indent);
+        logAppend(indent);
         if (isRight) {
-            System.out.print(" /");
+            logAppend(" /");
         } else {
-            System.out.print(" \\");
+            logAppend(" \\");
         }
-        System.out.print("----- ");
+        logAppend("----- ");
         printNodeValue(node);
         if (node.getChildren().size() > 1 && node.getChildren().get(1) != null) {
             printTree(node.getChildren().get(1), false, indent + (isRight ? " |      " : "        "));
