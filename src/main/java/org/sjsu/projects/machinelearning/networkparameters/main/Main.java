@@ -36,8 +36,12 @@ public class Main {
 		
 //		List<String> labels = randomlySelectFeatures();
 		
+		String trainFile = args[0];
+		String testFile = args[1];
+		
 		System.out.println("Reading data...");
-		List<DataSample> trainingData = readData(true);
+		List<DataSample> trainingData = readData(true, trainFile, testFile);
+		System.out.println("Training Data Count: " + trainingData.size());
 		System.out.println("Finished reading data...");
 
 		DecisionTree tree = new DecisionTree();
@@ -54,8 +58,9 @@ public class Main {
 		// read test data
 		System.out.println("Predicting results...");
 
-		List<DataSample> testingData = readData(false);
+		List<DataSample> testingData = readData(false, trainFile, testFile);
 //		 List<String> predictions = Lists.newArrayList();
+		System.out.println("Testing Data Count: " + testingData.size());
 
 		System.out.println(calculateAccuracy(testingData, tree).toString());
 
@@ -639,9 +644,9 @@ public class Main {
 
 	}
 
-	private static List<DataSample> readData(boolean training) throws IOException {
+	private static List<DataSample> readData(boolean training, String trainFile, String testFile) throws IOException {
 		List<DataSample> data = new ArrayList<DataSample>();
-		String filename = training ? "train.csv" : "test.csv";
+		String filename = training ? trainFile : testFile;
 		InputStreamReader stream = new InputStreamReader(Main.class.getResourceAsStream(filename));
 		try (ICsvListReader listReader = new CsvListReader(stream, CsvPreference.STANDARD_PREFERENCE);) {
 
