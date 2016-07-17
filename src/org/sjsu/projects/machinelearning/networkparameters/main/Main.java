@@ -645,8 +645,7 @@ public class Main {
 
 	private static List<DataSample> readData(boolean training) throws IOException {
 		List<DataSample> data = new ArrayList<DataSample>();
-		File jarPath=new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-		String filename = jarPath.getParentFile().getAbsolutePath() + (training ? "/train.csv" : "/test.csv");
+		String filename = training ? "./train.csv" : "./test.csv";
 		InputStreamReader stream = new InputStreamReader(new FileInputStream(filename));
 		try (ICsvListReader listReader = new CsvListReader(stream, CsvPreference.STANDARD_PREFERENCE);) {
 
