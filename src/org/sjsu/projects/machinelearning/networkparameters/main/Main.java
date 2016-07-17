@@ -1,8 +1,10 @@
-package org.sjsu.projects.machinelearning.networkparameters.main;
+package main;
 
-import static org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.PredicateFeature.*;
-import static org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.P.*;
+import static decisiontree.feature.PredicateFeature.*;
+import static decisiontree.feature.P.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,14 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.DecisionTree;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.SimpleDataSample;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.Feature;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.BooleanLabel;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.StringLabel;
-import org.sjsu.projects.machinelearning.networkparameters.utility.AccuracyMatrices;
+import decisiontree.DecisionTree;
+import decisiontree.data.DataSample;
+import decisiontree.data.SimpleDataSample;
+import decisiontree.feature.Feature;
+import decisiontree.label.BooleanLabel;
+import decisiontree.label.Label;
+import decisiontree.label.StringLabel;
+import utility.AccuracyMatrices;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.cellprocessor.ParseDouble;
@@ -36,11 +38,8 @@ public class Main {
 		
 //		List<String> labels = randomlySelectFeatures();
 		
-		String trainFile = args[0];
-		String testFile = args[1];
-		
 		System.out.println("Reading data...");
-		List<DataSample> trainingData = readData(true, trainFile, testFile);
+		List<DataSample> trainingData = readData(true);
 		System.out.println("Training Data Count: " + trainingData.size());
 		System.out.println("Finished reading data...");
 
@@ -58,7 +57,7 @@ public class Main {
 		// read test data
 		System.out.println("Predicting results...");
 
-		List<DataSample> testingData = readData(false, trainFile, testFile);
+		List<DataSample> testingData = readData(false);
 //		 List<String> predictions = Lists.newArrayList();
 		System.out.println("Testing Data Count: " + testingData.size());
 
@@ -644,10 +643,11 @@ public class Main {
 
 	}
 
-	private static List<DataSample> readData(boolean training, String trainFile, String testFile) throws IOException {
+	private static List<DataSample> readData(boolean training) throws IOException {
 		List<DataSample> data = new ArrayList<DataSample>();
-		String filename = training ? trainFile : testFile;
-		InputStreamReader stream = new InputStreamReader(Main.class.getResourceAsStream(filename));
+		File jarPath=new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+		String filename = jarPath.getParentFile().getParentFile().getParentFile().getAbsolutePath() + (training ? "/train.csv" : "/test.csv");
+		InputStreamReader stream = new InputStreamReader(new FileInputStream(filename));
 		try (ICsvListReader listReader = new CsvListReader(stream, CsvPreference.STANDARD_PREFERENCE);) {
 
 			// the header elements are used to map the values to the bean (names

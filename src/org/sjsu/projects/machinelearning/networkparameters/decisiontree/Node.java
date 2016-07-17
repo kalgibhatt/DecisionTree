@@ -1,9 +1,9 @@
-package org.sjsu.projects.machinelearning.networkparameters.decisiontree;
+package decisiontree;
 
 import java.util.List;
 
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.Feature;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
+import decisiontree.feature.Feature;
+import decisiontree.label.Label;
 
 import com.google.common.collect.Lists;
 

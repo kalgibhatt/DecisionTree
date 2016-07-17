@@ -1,11 +1,11 @@
-package org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature;
+package decisiontree.feature;
 
 import static java.util.stream.Collectors.partitioningBy;
 
 import java.util.List;
 import java.util.Map;
 
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
+import decisiontree.data.DataSample;
 
 import com.google.common.collect.Lists;
 

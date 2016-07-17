@@ -1,4 +1,4 @@
-package org.sjsu.projects.machinelearning.networkparameters.decisiontree.utils;
+package decisiontree.utils;
 
 import net.jafama.FastMath;
 

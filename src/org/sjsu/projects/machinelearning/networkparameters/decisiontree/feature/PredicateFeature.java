@@ -1,9 +1,9 @@
-package org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature;
+package decisiontree.feature;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
+import decisiontree.data.DataSample;
 
 /**
  * Feature type that splits data into 2 sublists - one that 

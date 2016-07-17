@@ -1,4 +1,4 @@
-package org.sjsu.projects.machinelearning.networkparameters.decisiontree;
+package decisiontree;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -9,11 +9,11 @@ import java.util.Map;
 
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.feature.Feature;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity.GiniIndexImpurityCalculation;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity.ImpurityCalculationMethod;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
+import decisiontree.data.DataSample;
+import decisiontree.feature.Feature;
+import decisiontree.impurity.GiniIndexImpurityCalculation;
+import decisiontree.impurity.ImpurityCalculationMethod;
+import decisiontree.label.Label;
 
 /**
  * Decision tree implementation.

@@ -1,4 +1,4 @@
-package org.sjsu.projects.machinelearning.networkparameters.utility;
+package utility;
 
 public class AccuracyMatrices {
 

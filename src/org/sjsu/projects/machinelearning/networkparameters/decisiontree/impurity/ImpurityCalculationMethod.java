@@ -1,9 +1,9 @@
-package org.sjsu.projects.machinelearning.networkparameters.decisiontree.impurity;
+package decisiontree.impurity;
 
 import java.util.List;
 
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.data.DataSample;
-import org.sjsu.projects.machinelearning.networkparameters.decisiontree.label.Label;
+import decisiontree.data.DataSample;
+import decisiontree.label.Label;
 
 /**
  * Impurity calculation method of decision tree. It is used during training while trying to find best split. For example
