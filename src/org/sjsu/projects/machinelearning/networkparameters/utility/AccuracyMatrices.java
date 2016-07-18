@@ -1,11 +1,23 @@
 package utility;
 
+import java.util.List;
+
 public class AccuracyMatrices {
 
 	private double TP;
 	private double TN;
 	private double FP;
 	private double FN;
+
+	private List<String> labels;
+
+	public List<String> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<String> labels) {
+		this.labels = labels;
+	}
 
 	public double getTP() {
 		return TP;
@@ -103,11 +115,11 @@ public class AccuracyMatrices {
 	}
 
 	public String toString() {
-		return "True Positive Rate: " + getTPR() + "	" + "True Negative Rate: " + getTNR() + "\n"
-				+ "Positive Predictive Value: " + getPPV() + "	" + "Negative Predictive Value: " + getNPV() + "\n"
-				+ "False Positive Rate: " + getFPR() + "	" + "False Negative Rate: " + getFNR() + "\n"
-				+ "False Discovery Rate: " + getFDR() + "\n" + "Accuracy: " + getACC() + "\n"
-				+ "F1 Score: " + getF1() + "\n";
+		return "Labels: " + getLabels().toString() + "\n" + "\t" + "True Positive Rate: " + getTPR() + "\n" + "\t"
+				+ "True Negative Rate: " + getTNR() + "\n" + "\t" + "Positive Predictive Value: " + getPPV() + "\n"
+				+ "\t" + "Negative Predictive Value: " + getNPV() + "\n" + "\t" + "False Positive Rate: " + getFPR()
+				+ "\n" + "\t" + "False Negative Rate: " + getFNR() + "\n" + "\t" + "False Discovery Rate: " + getFDR()
+				+ "\n" + "\t" + "Accuracy: " + getACC() + "\n" + "\t" + "F1 Score: " + getF1() + "\n";
 	}
 
 }

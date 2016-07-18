@@ -12,9 +12,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/keyur/Desktop/DecisionTree/lib/guava-18.0.jar"/>
-	<classpathentry kind="lib" path="/home/keyur/Desktop/DecisionTree/lib/jafama.jar"/>
-	<classpathentry kind="lib" path="/home/keyur/Desktop/DecisionTree/lib/jafaran.jar"/>
-	<classpathentry kind="lib" path="/home/keyur/Desktop/DecisionTree/lib/super-csv-2.3.1.jar"/>
+	<classpathentry kind="lib" path="/Users/kalgi/Documents/workspace/MachineLearning/DecisionTree/lib/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="/Users/kalgi/Documents/workspace/MachineLearning/DecisionTree/lib/jafama.jar"/>
+	<classpathentry kind="lib" path="/Users/kalgi/Documents/workspace/MachineLearning/DecisionTree/lib/jafaran.jar"/>
+	<classpathentry kind="lib" path="/Users/kalgi/Documents/workspace/MachineLearning/DecisionTree/lib/super-csv-2.3.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
