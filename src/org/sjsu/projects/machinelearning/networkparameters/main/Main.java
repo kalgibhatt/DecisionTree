@@ -33,82 +33,88 @@ import decisiontree.label.BooleanLabel;
 import decisiontree.label.Label;
 import decisiontree.label.StringLabel;
 import utility.AccuracyMatrices;
+import utility.ProjectProperties;
+import utility.PropertiesLoader;
 
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-
-		List<AccuracyMatrices> accuracyList = new ArrayList<AccuracyMatrices>();
-		for (int i = 0; i < 1000; i++) {
-			log("Randomly deciding the features to use...");
-			List<String> labels = randomlySelectFeatures();
-			accuracyList.add(calculateAccuracyForLabels(labels));
+		PropertiesLoader.loadProperties();
+		if(ProjectProperties.isLabelRandom) {
+			List<AccuracyMatrices> accuracyList = new ArrayList<AccuracyMatrices>();
+			for (int i = 0; i < ProjectProperties.iterationCount; i++) {
+				log("Randomly deciding the features to use...");
+				List<String> labels = randomlySelectFeatures();
+				accuracyList.add(calculateAccuracyForLabels(labels));
+			}
+			
+			log("Dumping accuracy matrices to a file...");
+			
+			FileWriter writer = new FileWriter(ProjectProperties.accuracyMeasureListFile);
+			writer.append("LabelsCount");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getLabels().size());
+			}
+			writer.append("\n");
+			writer.append("TPR");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getTPR());
+			}
+			writer.append("\n");
+			writer.append("TNR");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getTNR());
+			}
+			writer.append("\n");
+			writer.append("PPV");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getPPV());
+			}
+			writer.append("\n");
+			writer.append("NPV");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getNPV());
+			}
+			writer.append("\n");
+			writer.append("FPR");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getFPR());
+			}
+			writer.append("\n");
+			writer.append("FNR");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getFNR());
+			}
+			writer.append("\n");
+			writer.append("FDR");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getFDR());
+			}
+			writer.append("\n");
+			writer.append("ACC");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getACC());
+			}
+			writer.append("\n");
+			writer.append("F1");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				writer.append(",");
+				writer.append(""+accuracyMatrix.getF1());
+			}
+			writer.flush();
+			writer.close();
+		} else {
+			System.out.println(calculateAccuracyForLabels(ProjectProperties.labelsInUse));
 		}
-		
-		log("Dumping accuracy matrices to a file...");
-		
-		FileWriter writer = new FileWriter("./AccuracyMatrices.csv");
-		writer.append("LabelsCount");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getLabels().size());
-		}
-		writer.append("\n");
-		writer.append("TPR");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getTPR());
-		}
-		writer.append("\n");
-		writer.append("TNR");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getTNR());
-		}
-		writer.append("\n");
-		writer.append("PPV");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getPPV());
-		}
-		writer.append("\n");
-		writer.append("NPV");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getNPV());
-		}
-		writer.append("\n");
-		writer.append("FPR");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getFPR());
-		}
-		writer.append("\n");
-		writer.append("FNR");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getFNR());
-		}
-		writer.append("\n");
-		writer.append("FDR");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getFDR());
-		}
-		writer.append("\n");
-		writer.append("ACC");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getACC());
-		}
-		writer.append("\n");
-		writer.append("F1");
-		for (AccuracyMatrices accuracyMatrix : accuracyList) {
-			writer.append(",");
-			writer.append(""+accuracyMatrix.getF1());
-		}
-		writer.flush();
-		writer.close();
 
 		// classify all test data
 		// for (DataSample dataSample : testingData) {
@@ -208,22 +214,12 @@ public class Main {
 	}
 
 	private static List<String> randomlySelectFeatures() {
-		String[] labels = { "duration", "protocol_type", "service", "flag", "source_bytes", "destination_bytes", "land",
-				"wrong_fragment", "urgent", "hot", "failed_logins", "logged_in", "compromised", "root_shell",
-				"su_attempted", "root", "file_creations", "shells", "access_files", "outbound_cmds", "is_hot_logins",
-				"is_guest_login", "connection_count", "service_count", "serror_rate", "service_serror_rate",
-				"rerror_rate", "service_rerror_rate", "same_service_rate", "diff_service_rate",
-				"service_diff_host_rate", "destination_host_count", "destination_host_service_count",
-				"destination_host_same_service_rate", "destination_host_diff_service_rate",
-				"destination_host_same_source_port_rate", "destination_host_service_diff_host_rate",
-				"destination_host_serror_rate", "destination_host_service_serror_rate", "destination_host_rerror_rate",
-				"destination_host_service_rerror_rate", "class" };
-		int[] labelInclusionArray = new int[labels.length];
-		double trigger = Math.random() + 0.25;
+		int[] labelInclusionArray = new int[ProjectProperties.allLabels.length];
+		double trigger = Math.random() + ProjectProperties.randomSelectionPadding;
 		List<String> labelsInUse = new ArrayList<String>();
 		for (int i = 0; i < labelInclusionArray.length; i++) {
 			if (Math.random() <= trigger) {
-				labelsInUse.add(labels[i]);
+				labelsInUse.add(ProjectProperties.allLabels[i]);
 			}
 		}
 		return labelsInUse;
