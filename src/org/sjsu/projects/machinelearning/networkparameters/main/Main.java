@@ -39,7 +39,7 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 
 		List<AccuracyMatrices> accuracyList = new ArrayList<AccuracyMatrices>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 1000; i++) {
 			log("Randomly deciding the features to use...");
 			List<String> labels = randomlySelectFeatures();
 			accuracyList.add(calculateAccuracyForLabels(labels));
