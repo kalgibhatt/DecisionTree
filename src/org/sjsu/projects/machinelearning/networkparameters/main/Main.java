@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.supercsv.cellprocessor.Optional;
@@ -34,86 +35,129 @@ import decisiontree.label.Label;
 import decisiontree.label.StringLabel;
 import utility.AccuracyMatrices;
 import utility.ProjectProperties;
+import utility.ProjectUtilities;
 import utility.PropertiesLoader;
 
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		PropertiesLoader.loadProperties();
-		if(ProjectProperties.isLabelRandom) {
+		log("Reading data...");
+		List<DataSample> trainingData = readData(true);
+		log("Training Data Count: " + trainingData.size());
+		// read test data
+		List<DataSample> testingData = readData(false);
+		// List<String> predictions = Lists.newArrayList();
+		log("Testing Data Count: " + testingData.size());
+		log("Finished reading data...");
+		DecisionTree tree = null;
+		if (ProjectProperties.isLabelRandom) {
 			List<AccuracyMatrices> accuracyList = new ArrayList<AccuracyMatrices>();
-			for (int i = 0; i < ProjectProperties.iterationCount; i++) {
-				log("Randomly deciding the features to use...");
-				List<String> labels = randomlySelectFeatures();
-				accuracyList.add(calculateAccuracyForLabels(labels));
+			for (int i = 1; i < ProjectProperties.allLabels.size(); i++) {
+				AccuracyMatrices avgAccuracy = new AccuracyMatrices();
+				AccuracyMatrices accuracy1 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
+						testingData, tree);
+				AccuracyMatrices accuracy2 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
+						testingData, tree);
+				AccuracyMatrices accuracy3 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
+						testingData, tree);
+				AccuracyMatrices accuracy4 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
+						testingData, tree);
+				AccuracyMatrices accuracy5 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
+						testingData, tree);
+				avgAccuracy.setLabelsCount(i);
+				avgAccuracy.setTPR(ProjectUtilities.averageOfFive(accuracy1.getTPR(), accuracy2.getTPR(),
+						accuracy3.getTPR(), accuracy4.getTPR(), accuracy5.getTPR()));
+				avgAccuracy.setTNR(ProjectUtilities.averageOfFive(accuracy1.getTNR(), accuracy2.getTNR(),
+						accuracy3.getTNR(), accuracy4.getTNR(), accuracy5.getTNR()));
+				avgAccuracy.setPPV(ProjectUtilities.averageOfFive(accuracy1.getPPV(), accuracy2.getPPV(),
+						accuracy3.getPPV(), accuracy4.getPPV(), accuracy5.getPPV()));
+				avgAccuracy.setNPV(ProjectUtilities.averageOfFive(accuracy1.getNPV(), accuracy2.getNPV(),
+						accuracy3.getNPV(), accuracy4.getNPV(), accuracy5.getNPV()));
+				avgAccuracy.setFPR(ProjectUtilities.averageOfFive(accuracy1.getFPR(), accuracy2.getFPR(),
+						accuracy3.getFPR(), accuracy4.getFPR(), accuracy5.getFPR()));
+				avgAccuracy.setFNR(ProjectUtilities.averageOfFive(accuracy1.getFNR(), accuracy2.getFNR(),
+						accuracy3.getFNR(), accuracy4.getFNR(), accuracy5.getFNR()));
+				avgAccuracy.setFDR(ProjectUtilities.averageOfFive(accuracy1.getFDR(), accuracy2.getFDR(),
+						accuracy3.getFDR(), accuracy4.getFDR(), accuracy5.getFDR()));
+				avgAccuracy.setACC(ProjectUtilities.averageOfFive(accuracy1.getACC(), accuracy2.getACC(),
+						accuracy3.getACC(), accuracy4.getACC(), accuracy5.getACC()));
+				avgAccuracy.setF1(ProjectUtilities.averageOfFive(accuracy1.getF1(), accuracy2.getF1(),
+						accuracy3.getF1(), accuracy4.getF1(), accuracy5.getF1()));
+				accuracyList.add(avgAccuracy);
 			}
-			
+			// for (int i = 0; i < ProjectProperties.iterationCount; i++) {
+			// log("Randomly deciding the features to use...");
+			// List<String> labels = randomlySelectFeatures();
+			// accuracyList.add(calculateAccuracyForLabels(labels));
+			// }
+			// Collections.sort(accuracyList);
 			log("Dumping accuracy matrices to a file...");
-			
-			FileWriter writer = new FileWriter(ProjectProperties.accuracyMeasureListFile);
+
+			FileWriter writer = new FileWriter("./" + ProjectProperties.accuracyMeasureListFile);
 			writer.append("LabelsCount");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getLabels().size());
+				writer.append("" + accuracyMatrix.getLabelsCount());
 			}
 			writer.append("\n");
 			writer.append("TPR");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getTPR());
+				writer.append("" + accuracyMatrix.getTPR());
 			}
 			writer.append("\n");
 			writer.append("TNR");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getTNR());
+				writer.append("" + accuracyMatrix.getTNR());
 			}
 			writer.append("\n");
 			writer.append("PPV");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getPPV());
+				writer.append("" + accuracyMatrix.getPPV());
 			}
 			writer.append("\n");
 			writer.append("NPV");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getNPV());
+				writer.append("" + accuracyMatrix.getNPV());
 			}
 			writer.append("\n");
 			writer.append("FPR");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getFPR());
+				writer.append("" + accuracyMatrix.getFPR());
 			}
 			writer.append("\n");
 			writer.append("FNR");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getFNR());
+				writer.append("" + accuracyMatrix.getFNR());
 			}
 			writer.append("\n");
 			writer.append("FDR");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getFDR());
+				writer.append("" + accuracyMatrix.getFDR());
 			}
 			writer.append("\n");
 			writer.append("ACC");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getACC());
+				writer.append("" + accuracyMatrix.getACC());
 			}
 			writer.append("\n");
 			writer.append("F1");
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
 				writer.append(",");
-				writer.append(""+accuracyMatrix.getF1());
+				writer.append("" + accuracyMatrix.getF1());
 			}
 			writer.flush();
 			writer.close();
 		} else {
-			System.out.println(calculateAccuracyForLabels(ProjectProperties.labelsInUse));
+			log(calculateAccuracyForLabels(ProjectProperties.labelsInUse, trainingData, testingData, tree));
 		}
 
 		// classify all test data
@@ -185,52 +229,49 @@ public class Main {
 
 	}
 
-	private static AccuracyMatrices calculateAccuracyForLabels(List<String> labels) throws IOException {
-		log("Reading data...");
-		List<DataSample> trainingData = readData(true);
-		log("Training Data Count: " + trainingData.size());
-		log("Finished reading data...");
+	private static List<String> randomlySelectFeatures(int labelCount) {
+		List<String> labels = new ArrayList<String>(ProjectProperties.allLabels);
+		Collections.shuffle(labels);
+		List<String> labelsInUse = new ArrayList<String>(labels.subList(0, labelCount));
+		return labelsInUse;
+	}
 
-		DecisionTree tree = new DecisionTree();
-
+	private static AccuracyMatrices calculateAccuracyForLabels(List<String> labels, List<DataSample> trainingData,
+			List<DataSample> testingData, DecisionTree tree) throws IOException {
+		tree = new DecisionTree();
 		List<Feature> features = getFeatures(labels);
-
 		log("Training model...");
 		tree.train(trainingData, features);
 		log("Finished training model...");
 
 		// print tree after training
-//		tree.printTree();
-
-		// read test data
+		if (ProjectProperties.printTree) {
+			tree.printTree();
+		}
 		log("Predicting results...");
-
-		List<DataSample> testingData = readData(false);
-		// List<String> predictions = Lists.newArrayList();
-		log("Testing Data Count: " + testingData.size());
-
 		return calculateAccuracy(testingData, tree, labels);
-		
 	}
 
 	private static List<String> randomlySelectFeatures() {
-		int[] labelInclusionArray = new int[ProjectProperties.allLabels.length];
+		int[] labelInclusionArray = new int[ProjectProperties.allLabels.size()];
 		double trigger = Math.random() + ProjectProperties.randomSelectionPadding;
 		List<String> labelsInUse = new ArrayList<String>();
 		for (int i = 0; i < labelInclusionArray.length; i++) {
 			if (Math.random() <= trigger) {
-				labelsInUse.add(ProjectProperties.allLabels[i]);
+				labelsInUse.add(ProjectProperties.allLabels.get(i));
 			}
 		}
 		return labelsInUse;
 	}
 
-	private static AccuracyMatrices calculateAccuracy(List<DataSample> testingData, DecisionTree tree, List<String> labels) {
+	private static AccuracyMatrices calculateAccuracy(List<DataSample> testingData, DecisionTree tree,
+			List<String> labels) {
 		double TP = 0;
 		double TN = 0;
 		double FP = 0;
 		double FN = 0;
-		AccuracyMatrices accuracy = new AccuracyMatrices();
+		AccuracyMatrices accuracy;
+		;
 		for (DataSample dataSample : testingData) {
 			int actualClass = Integer.parseInt(dataSample.getValue("class").get().toString());
 			int predictedClass = Integer.parseInt(tree.classify(dataSample).getPrintValue());
@@ -248,12 +289,9 @@ public class Main {
 				}
 			}
 		}
-		accuracy.setFN(FN);
-		accuracy.setFP(FP);
-		accuracy.setTN(TN);
-		accuracy.setTP(TP);
-		accuracy.setLabels(labels);
-		
+		accuracy = new AccuracyMatrices(TP, TN, FP, FN);
+		accuracy.setLabelsCount(labels.size());
+
 		return accuracy;
 	}
 
@@ -841,7 +879,7 @@ public class Main {
 
 	private static List<DataSample> readData(boolean training) throws IOException {
 		List<DataSample> data = new ArrayList<DataSample>();
-		String filename = training ? "./train.csv" : "./test.csv";
+		String filename = training ? "./" + ProjectProperties.trainingFile : "./" + ProjectProperties.testingFile;
 		InputStreamReader stream = new InputStreamReader(new FileInputStream(filename));
 		try (ICsvListReader listReader = new CsvListReader(stream, CsvPreference.STANDARD_PREFERENCE);) {
 

@@ -15,14 +15,19 @@ public class PropertiesLoader {
 			prop.load(new FileInputStream(new File("./properties.properties")));
 			ProjectProperties.isLocal = Boolean.parseBoolean(prop.getProperty("isLocal"));
 			ProjectProperties.iterationCount = Integer.parseInt(prop.getProperty("iterationCount"));
-			ProjectProperties.allLabels = prop.getProperty("allLabels").split(",");
+			for (String label : prop.getProperty("allLabels").split(",")) {
+				ProjectProperties.allLabels.add(label);
+			}
 			ProjectProperties.isLabelRandom = Boolean.parseBoolean(prop.getProperty("isLabelRandom"));
 			ProjectProperties.randomSelectionPadding = Double.parseDouble(prop.getProperty("randomSelectionPadding"));
-			List<String> labelsInUse = new ArrayList<String>();
+			ProjectProperties.labelsInUse = new ArrayList<String>();
 			for (String label : prop.getProperty("labelsInUse").split(",")) {
-				labelsInUse.add(label);
+				ProjectProperties.labelsInUse.add(label);
 			}
-			ProjectProperties.accuracyMeasureListFile = prop.getProperty("accuracyMeasureListFile"); 
+			ProjectProperties.accuracyMeasureListFile = prop.getProperty("accuracyMeasureListFile");
+			ProjectProperties.trainingFile = prop.getProperty("trainingFile");
+			ProjectProperties.testingFile = prop.getProperty("testingFile");
+			ProjectProperties.printTree = Boolean.parseBoolean(prop.getProperty("printTree"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

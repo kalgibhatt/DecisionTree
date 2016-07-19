@@ -1,125 +1,163 @@
 package utility;
 
-import java.util.List;
-
-public class AccuracyMatrices {
+public class AccuracyMatrices implements Comparable<AccuracyMatrices> {
 
 	private double TP;
 	private double TN;
 	private double FP;
 	private double FN;
 
-	private List<String> labels;
+	private double TPR;
+	private double TNR;
+	private double PPV;
+	private double NPV;
+	private double FPR;
+	private double FNR;
+	private double FDR;
+	private double ACC;
+	private double F1;
 
-	public List<String> getLabels() {
-		return labels;
+	public AccuracyMatrices(double TP, double TN, double FP, double FN) {
+		TPR = (TP / (TP + FN));
+		TNR = (TP / (TP + FN));
+		PPV = (TP / (TP + FP));
+		NPV = (TN / (TN + FN));
+		FPR = (FP / (FP + TN));
+		FNR = (FN / (FN + TP));
+		FDR = (FP / (FP + TP));
+		ACC = ((TP + TN) / (TP + FN + FP + TN));
+		F1 = (2 * TP / (2 * TP + FP + FN));
 	}
 
-	public void setLabels(List<String> labels) {
-		this.labels = labels;
+	public AccuracyMatrices() {
+
 	}
+
+	private int labelsCount;
 
 	public double getTP() {
 		return TP;
 	}
 
-	public void setTP(double TP) {
-		this.TP = TP;
+	public void setTP(double tP) {
+		TP = tP;
 	}
 
 	public double getTN() {
 		return TN;
 	}
 
-	public void setTN(double TN) {
-		this.TN = TN;
+	public void setTN(double tN) {
+		TN = tN;
 	}
 
 	public double getFP() {
 		return FP;
 	}
 
-	public void setFP(double FP) {
-		this.FP = FP;
+	public void setFP(double fP) {
+		FP = fP;
 	}
 
 	public double getFN() {
 		return FN;
 	}
 
-	public void setFN(double FN) {
-		this.FN = FN;
+	public void setFN(double fN) {
+		FN = fN;
 	}
 
-	/**
-	 * True Positive Rate
-	 */
 	public double getTPR() {
-		return (TP / (TP + FN));
+		return TPR;
 	}
 
-	/**
-	 * True Negative Rate
-	 */
+	public void setTPR(double tPR) {
+		TPR = tPR;
+	}
+
 	public double getTNR() {
-		return (TP / (TP + FN));
+		return TNR;
 	}
 
-	/**
-	 * Positive Predictive Value
-	 */
+	public void setTNR(double tNR) {
+		TNR = tNR;
+	}
+
 	public double getPPV() {
-		return (TP / (TP + FP));
+		return PPV;
 	}
 
-	/**
-	 * Negative Predictive Value
-	 */
+	public void setPPV(double pPV) {
+		PPV = pPV;
+	}
+
 	public double getNPV() {
-		return (TN / (TN + FN));
+		return NPV;
 	}
 
-	/**
-	 * False Positive Rate
-	 */
+	public void setNPV(double nPV) {
+		NPV = nPV;
+	}
+
 	public double getFPR() {
-		return (FP / (FP + TN));
+		return FPR;
 	}
 
-	/**
-	 * False Negative Rate
-	 */
+	public void setFPR(double fPR) {
+		FPR = fPR;
+	}
+
 	public double getFNR() {
-		return (FN / (FN + TP));
+		return FNR;
 	}
 
-	/**
-	 * False Discovery Rate
-	 */
+	public void setFNR(double fNR) {
+		FNR = fNR;
+	}
+
 	public double getFDR() {
-		return (FP / (FP + TP));
+		return FDR;
 	}
 
-	/**
-	 * Accuracy
-	 */
+	public void setFDR(double fDR) {
+		FDR = fDR;
+	}
+
 	public double getACC() {
-		return ((TP + TN) / (TP + FN + FP + TN));
+		return ACC;
 	}
 
-	/**
-	 * F1 Score: Harmonic Mean of Precision and Recall
-	 */
+	public void setACC(double aCC) {
+		ACC = aCC;
+	}
+
 	public double getF1() {
-		return (2 * TP / (2 * TP + FP + FN));
+		return F1;
+	}
+
+	public void setF1(double f1) {
+		F1 = f1;
+	}
+
+	public int getLabelsCount() {
+		return labelsCount;
+	}
+
+	public void setLabelsCount(int labelsCount) {
+		this.labelsCount = labelsCount;
 	}
 
 	public String toString() {
-		return "Labels: " + getLabels().toString() + "\n" + "\t" + "True Positive Rate: " + getTPR() + "\n" + "\t"
-				+ "True Negative Rate: " + getTNR() + "\n" + "\t" + "Positive Predictive Value: " + getPPV() + "\n"
-				+ "\t" + "Negative Predictive Value: " + getNPV() + "\n" + "\t" + "False Positive Rate: " + getFPR()
-				+ "\n" + "\t" + "False Negative Rate: " + getFNR() + "\n" + "\t" + "False Discovery Rate: " + getFDR()
-				+ "\n" + "\t" + "Accuracy: " + getACC() + "\n" + "\t" + "F1 Score: " + getF1() + "\n";
+		return "LabelsCount: " + getLabelsCount() + "\n" + "True Positive Rate: " + "\t" + getTPR() + "\n"
+				+ "True Negative Rate: " + "\t" + getTNR() + "\n" + "Positive Predictive Value: " + "\t" + getPPV()
+				+ "\n" + "Negative Predictive Value: " + "\t" + getNPV() + "\n" + "False Positive Rate: " + "\t"
+				+ getFPR() + "\n" + "False Negative Rate: " + "\t" + getFNR() + "\n" + "False Discovery Rate: " + "\t"
+				+ getFDR() + "\n" + "Accuracy: " + "\t" + getACC() + "\n" + "F1 Score: " + "\t" + getF1() + "\n";
+	}
+
+	@Override
+	public int compareTo(AccuracyMatrices compareMatrix) {
+		return this.getLabelsCount() - compareMatrix.getLabelsCount();
 	}
 
 }
