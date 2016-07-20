@@ -1,5 +1,6 @@
 package decisiontree.impurity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,7 @@ import decisiontree.label.Label;
  * @author Kalgi Bhatt
  *
  */
-public class GiniIndexImpurityCalculation implements ImpurityCalculationMethod {
+public class GiniIndexImpurityCalculation implements ImpurityCalculationMethod, Serializable {
 
     /**
      * {@inheritDoc}

@@ -1,5 +1,6 @@
 package decisiontree.feature;
 
+import java.io.Serializable;
 import java.util.function.Predicate;
 
 /**

@@ -35,7 +35,6 @@ import decisiontree.label.Label;
 import decisiontree.label.StringLabel;
 import utility.AccuracyMatrices;
 import utility.ProjectProperties;
-import utility.ProjectUtilities;
 import utility.PropertiesLoader;
 
 public class Main {
