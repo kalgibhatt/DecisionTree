@@ -54,36 +54,32 @@ public class Main {
 		if (ProjectProperties.isLabelRandom) {
 			List<AccuracyMatrices> accuracyList = new ArrayList<AccuracyMatrices>();
 			for (int i = 1; i < ProjectProperties.allLabels.size(); i++) {
+				double totalTPR = 0, totalTNR = 0, totalPPV = 0, totalNPV = 0, totalFPR = 0, totalFNR = 0, totalFDR = 0,
+						totalACC = 0, totalF1 = 0;
 				AccuracyMatrices avgAccuracy = new AccuracyMatrices();
-				AccuracyMatrices accuracy1 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
-						testingData, tree);
-				AccuracyMatrices accuracy2 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
-						testingData, tree);
-				AccuracyMatrices accuracy3 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
-						testingData, tree);
-				AccuracyMatrices accuracy4 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
-						testingData, tree);
-				AccuracyMatrices accuracy5 = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
-						testingData, tree);
+				for (int j = 0; j < ProjectProperties.aggregationCount; j++) {
+					AccuracyMatrices accuracy = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
+							testingData, tree);
+					totalTPR += accuracy.getTPR();
+					totalTNR += accuracy.getTNR();
+					totalPPV += accuracy.getPPV();
+					totalNPV += accuracy.getNPV();
+					totalFPR += accuracy.getFPR();
+					totalFNR += accuracy.getFNR();
+					totalFDR += accuracy.getFDR();
+					totalACC += accuracy.getACC();
+					totalF1 += accuracy.getF1();
+				}
 				avgAccuracy.setLabelsCount(i);
-				avgAccuracy.setTPR(ProjectUtilities.averageOfFive(accuracy1.getTPR(), accuracy2.getTPR(),
-						accuracy3.getTPR(), accuracy4.getTPR(), accuracy5.getTPR()));
-				avgAccuracy.setTNR(ProjectUtilities.averageOfFive(accuracy1.getTNR(), accuracy2.getTNR(),
-						accuracy3.getTNR(), accuracy4.getTNR(), accuracy5.getTNR()));
-				avgAccuracy.setPPV(ProjectUtilities.averageOfFive(accuracy1.getPPV(), accuracy2.getPPV(),
-						accuracy3.getPPV(), accuracy4.getPPV(), accuracy5.getPPV()));
-				avgAccuracy.setNPV(ProjectUtilities.averageOfFive(accuracy1.getNPV(), accuracy2.getNPV(),
-						accuracy3.getNPV(), accuracy4.getNPV(), accuracy5.getNPV()));
-				avgAccuracy.setFPR(ProjectUtilities.averageOfFive(accuracy1.getFPR(), accuracy2.getFPR(),
-						accuracy3.getFPR(), accuracy4.getFPR(), accuracy5.getFPR()));
-				avgAccuracy.setFNR(ProjectUtilities.averageOfFive(accuracy1.getFNR(), accuracy2.getFNR(),
-						accuracy3.getFNR(), accuracy4.getFNR(), accuracy5.getFNR()));
-				avgAccuracy.setFDR(ProjectUtilities.averageOfFive(accuracy1.getFDR(), accuracy2.getFDR(),
-						accuracy3.getFDR(), accuracy4.getFDR(), accuracy5.getFDR()));
-				avgAccuracy.setACC(ProjectUtilities.averageOfFive(accuracy1.getACC(), accuracy2.getACC(),
-						accuracy3.getACC(), accuracy4.getACC(), accuracy5.getACC()));
-				avgAccuracy.setF1(ProjectUtilities.averageOfFive(accuracy1.getF1(), accuracy2.getF1(),
-						accuracy3.getF1(), accuracy4.getF1(), accuracy5.getF1()));
+				avgAccuracy.setTPR(totalTPR / ProjectProperties.aggregationCount);
+				avgAccuracy.setTNR(totalTNR / ProjectProperties.aggregationCount);
+				avgAccuracy.setPPV(totalPPV / ProjectProperties.aggregationCount);
+				avgAccuracy.setNPV(totalNPV / ProjectProperties.aggregationCount);
+				avgAccuracy.setFPR(totalFPR / ProjectProperties.aggregationCount);
+				avgAccuracy.setFNR(totalFNR / ProjectProperties.aggregationCount);
+				avgAccuracy.setFDR(totalFDR / ProjectProperties.aggregationCount);
+				avgAccuracy.setACC(totalACC / ProjectProperties.aggregationCount);
+				avgAccuracy.setF1(totalF1 / ProjectProperties.aggregationCount);
 				accuracyList.add(avgAccuracy);
 			}
 			// for (int i = 0; i < ProjectProperties.iterationCount; i++) {

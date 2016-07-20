@@ -15,4 +15,5 @@ public class ProjectProperties {
 	public static String trainingFile;
 	public static String testingFile;
 	public static boolean printTree;
+	public static int aggregationCount;
 }
