@@ -1,5 +1,8 @@
 package utility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccuracyMatrices implements Comparable<AccuracyMatrices> {
 
 	private double TP;
@@ -16,6 +19,8 @@ public class AccuracyMatrices implements Comparable<AccuracyMatrices> {
 	private double FDR;
 	private double ACC;
 	private double F1;
+	
+	private List<String> labels = new ArrayList<String>();
 
 	public AccuracyMatrices(double TP, double TN, double FP, double FN) {
 		TPR = (TP / (TP + FN));
@@ -33,7 +38,13 @@ public class AccuracyMatrices implements Comparable<AccuracyMatrices> {
 
 	}
 
-	private int labelsCount;
+	public List<String> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<String> labels) {
+		this.labels = labels;
+	}
 
 	public double getTP() {
 		return TP;
@@ -139,25 +150,19 @@ public class AccuracyMatrices implements Comparable<AccuracyMatrices> {
 		F1 = f1;
 	}
 
-	public int getLabelsCount() {
-		return labelsCount;
-	}
-
-	public void setLabelsCount(int labelsCount) {
-		this.labelsCount = labelsCount;
-	}
-
 	public String toString() {
-		return "LabelsCount: " + getLabelsCount() + "\n" + "True Positive Rate: " + "\t" + getTPR() + "\n"
-				+ "True Negative Rate: " + "\t" + getTNR() + "\n" + "Positive Predictive Value: " + "\t" + getPPV()
-				+ "\n" + "Negative Predictive Value: " + "\t" + getNPV() + "\n" + "False Positive Rate: " + "\t"
-				+ getFPR() + "\n" + "False Negative Rate: " + "\t" + getFNR() + "\n" + "False Discovery Rate: " + "\t"
-				+ getFDR() + "\n" + "Accuracy: " + "\t" + getACC() + "\n" + "F1 Score: " + "\t" + getF1() + "\n";
+		String objectString = "";
+		objectString = objectString + "LabelsCount: " + getLabels().size() + "\n" + "Labels: ";
+		for (String label : getLabels()) {
+			objectString = objectString + label + ",";
+		}
+		objectString = objectString + "\n" + "True Positive Rate: " + "\t" + getTPR() + "\n" + "True Negative Rate: " + "\t" + getTNR() + "\n" + "Positive Predictive Value: " + "\t" + getPPV() + "\n" + "Negative Predictive Value: " + "\t" + getNPV() + "\n" + "False Positive Rate: " + "\t" + getFPR() + "\n" + "False Negative Rate: " + "\t" + getFNR() + "\n" + "False Discovery Rate: " + "\t" + getFDR() + "\n" + "Accuracy: " + "\t" + getACC() + "\n" + "F1 Score: " + "\t" + getF1() + "\n";
+		return  objectString;
 	}
 
 	@Override
 	public int compareTo(AccuracyMatrices compareMatrix) {
-		return this.getLabelsCount() - compareMatrix.getLabelsCount();
+		return this.getLabels().size() - compareMatrix.getLabels().size();
 	}
 
 }

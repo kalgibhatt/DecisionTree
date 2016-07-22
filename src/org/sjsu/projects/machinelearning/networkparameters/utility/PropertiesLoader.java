@@ -29,6 +29,7 @@ public class PropertiesLoader {
 			ProjectProperties.printTree = Boolean.parseBoolean(prop.getProperty("printTree"));
 			ProjectProperties.aggregationCount = Integer.parseInt(prop.getProperty("aggregationCount"));
 			ProjectProperties.treeObjectFileName = prop.getProperty("treeObjectFileName");
+			ProjectProperties.labelSelectionCount = Integer.parseInt(prop.getProperty("labelSelectionCount"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

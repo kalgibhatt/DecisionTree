@@ -7,6 +7,7 @@ import static decisiontree.feature.P.moreThanD;
 import static decisiontree.feature.PredicateFeature.newFeature;
 import static logger.Logger.log;
 
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -52,103 +53,705 @@ public class Main {
 		DecisionTree tree = null;
 		if (ProjectProperties.isLabelRandom) {
 			List<AccuracyMatrices> accuracyList = new ArrayList<AccuracyMatrices>();
-			for (int i = 1; i < ProjectProperties.allLabels.size(); i++) {
-				double totalTPR = 0, totalTNR = 0, totalPPV = 0, totalNPV = 0, totalFPR = 0, totalFNR = 0, totalFDR = 0,
-						totalACC = 0, totalF1 = 0;
-				AccuracyMatrices avgAccuracy = new AccuracyMatrices();
-				for (int j = 0; j < ProjectProperties.aggregationCount; j++) {
-					AccuracyMatrices accuracy = calculateAccuracyForLabels(randomlySelectFeatures(i), trainingData,
-							testingData, tree);
-					totalTPR += accuracy.getTPR();
-					totalTNR += accuracy.getTNR();
-					totalPPV += accuracy.getPPV();
-					totalNPV += accuracy.getNPV();
-					totalFPR += accuracy.getFPR();
-					totalFNR += accuracy.getFNR();
-					totalFDR += accuracy.getFDR();
-					totalACC += accuracy.getACC();
-					totalF1 += accuracy.getF1();
-				}
-				avgAccuracy.setLabelsCount(i);
-				avgAccuracy.setTPR(totalTPR / ProjectProperties.aggregationCount);
-				avgAccuracy.setTNR(totalTNR / ProjectProperties.aggregationCount);
-				avgAccuracy.setPPV(totalPPV / ProjectProperties.aggregationCount);
-				avgAccuracy.setNPV(totalNPV / ProjectProperties.aggregationCount);
-				avgAccuracy.setFPR(totalFPR / ProjectProperties.aggregationCount);
-				avgAccuracy.setFNR(totalFNR / ProjectProperties.aggregationCount);
-				avgAccuracy.setFDR(totalFDR / ProjectProperties.aggregationCount);
-				avgAccuracy.setACC(totalACC / ProjectProperties.aggregationCount);
-				avgAccuracy.setF1(totalF1 / ProjectProperties.aggregationCount);
-				accuracyList.add(avgAccuracy);
+			for (int i = 0; i < ProjectProperties.iterationCount; i++) {
+				accuracyList
+						.add(calculateAccuracyForLabels(randomlySelectFeatures(ProjectProperties.labelSelectionCount),
+								trainingData, testingData, tree));
 			}
-			// for (int i = 0; i < ProjectProperties.iterationCount; i++) {
-			// log("Randomly deciding the features to use...");
-			// List<String> labels = randomlySelectFeatures();
-			// accuracyList.add(calculateAccuracyForLabels(labels));
-			// }
-			// Collections.sort(accuracyList);
 			log("Dumping accuracy matrices to a file...");
+			for (AccuracyMatrices accuracyMatrix : accuracyList) {
+				log(accuracyMatrix.toString());
+			}
 
-			FileWriter writer = new FileWriter("./" + ProjectProperties.accuracyMeasureListFile);
-			writer.append("LabelsCount");
+			BufferedWriter writer = new BufferedWriter(
+					new FileWriter("./" + ProjectProperties.accuracyMeasureListFile));
+			BufferedWriter durationWriter = new BufferedWriter(new FileWriter("./" + "durationWriter.csv"));
+			BufferedWriter protocolTypeWriter = new BufferedWriter(new FileWriter("./" + "protocolTypeWriter.csv"));
+			BufferedWriter serviceWriter = new BufferedWriter(new FileWriter("./" + "serviceWriter.csv"));
+			BufferedWriter flagWriter = new BufferedWriter(new FileWriter("./" + "flagWriter.csv"));
+			BufferedWriter sourceBytesWriter = new BufferedWriter(new FileWriter("./" + "sourceBytesWriter.csv"));
+			BufferedWriter destinationBytesWriter = new BufferedWriter(new FileWriter("./" + "destinationBytesWriter.csv"));
+			BufferedWriter landWriter = new BufferedWriter(new FileWriter("./" + "landWriter.csv"));
+			BufferedWriter wrongFragmentWriter = new BufferedWriter(new FileWriter("./" + "wrongFragmentWriter.csv"));
+			BufferedWriter urgentWriter = new BufferedWriter(new FileWriter("./" + "urgentWriter.csv"));
+			BufferedWriter hotWriter = new BufferedWriter(new FileWriter("./" + "hotWriter.csv"));
+			BufferedWriter failedLoginsWriter = new BufferedWriter(new FileWriter("./" + "failedLoginsWriter.csv"));
+			BufferedWriter loggedInWriter = new BufferedWriter(new FileWriter("./" + "loggedInWriter.csv"));
+			BufferedWriter compromisedWriter = new BufferedWriter(new FileWriter("./" + "compromisedWriter.csv"));
+			BufferedWriter rootShellWriter = new BufferedWriter(new FileWriter("./" + "rootShellWriter.csv"));
+			BufferedWriter suAttemptedWriter = new BufferedWriter(new FileWriter("./" + "suAttemptedWriter.csv"));
+			BufferedWriter rootWriter = new BufferedWriter(new FileWriter("./" + "rootWriter.csv"));
+			BufferedWriter fileCreationsWriter = new BufferedWriter(new FileWriter("./" + "fileCreationsWriter.csv"));
+			BufferedWriter shellsWriter = new BufferedWriter(new FileWriter("./" + "shellsWriter.csv"));
+			BufferedWriter accessFilesWriter = new BufferedWriter(new FileWriter("./" + "accessFilesWriter.csv"));
+			BufferedWriter outboundCMDsWriter = new BufferedWriter(new FileWriter("./" + "outboundCMDsWriter.csv"));
+			BufferedWriter isHotLoginWriter = new BufferedWriter(new FileWriter("./" + "isHotLoginWriter.csv"));
+			BufferedWriter isGuestLoginWriter = new BufferedWriter(new FileWriter("./" + "isGuestLoginWriter.csv"));
+			BufferedWriter connectionCountWriter = new BufferedWriter(new FileWriter("./" + "connectionCountWriter.csv"));
+			BufferedWriter serviceCountWriter = new BufferedWriter(new FileWriter("./" + "serviceCountWriter.csv"));
+			BufferedWriter serrorRateWriter = new BufferedWriter(new FileWriter("./" + "serrorRateWriter.csv"));
+			BufferedWriter serviceSerrorRateWriter = new BufferedWriter(
+					new FileWriter("./" + "serviceSerrirRateWriter.csv"));
+			BufferedWriter rerrorRateWriter = new BufferedWriter(new FileWriter("./" + "rerrorRateWriter.csv"));
+			BufferedWriter serviceRerrorRateWriter = new BufferedWriter(
+					new FileWriter("./" + "serviceRerrorRateWriter.csv"));
+			BufferedWriter sameServiceRateWriter = new BufferedWriter(new FileWriter("./" + "sameServiceRateWriter.csv"));
+			BufferedWriter differentServiceRateWriter = new BufferedWriter(
+					new FileWriter("./" + "differentServiceRateWriter.csv"));
+			BufferedWriter serviceDifferentHostRateWriter = new BufferedWriter(
+					new FileWriter("./" + "serviceDifferentHostRateWriter.csv"));
+			BufferedWriter destinationHostCountWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostCountWriter.csv"));
+			BufferedWriter destinationHostServiceCountWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostServiceCountWriter.csv"));
+			BufferedWriter destinationHostSameServiceRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostSameServiceRateWriter.csv"));
+			BufferedWriter destinationHostDiffServiceRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostDiffServiceRateWriter.csv"));
+			BufferedWriter destinationHostSameCourcePortRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostSameCourcePortRateWriter.csv"));
+			BufferedWriter destinationHostServiceDiffHostRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostServiceDiffHostRateWriter.csv"));
+			BufferedWriter destinationHostSerrorRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostSerrorRateWriter.csv"));
+			BufferedWriter destinationHostServiceSerrorRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostServiceSerrorRateWriter.csv"));
+			BufferedWriter destinationHostRerrorRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostRerrorRateWriter.csv"));
+			BufferedWriter destinationHostServiceRerrorRateWriter = new BufferedWriter(
+					new FileWriter("./" + "destinationHostServiceRerrorRateWriter.csv"));
+			// destination_host_service_rerror_rate
 			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getLabelsCount());
+				for (String label : accuracyMatrix.getLabels()) {
+					writer.append(label + ",");
+				}
+				writer.append(accuracyMatrix.getTPR() + ",");
+				writer.append(accuracyMatrix.getTNR() + ",");
+				writer.append(accuracyMatrix.getPPV() + ",");
+				writer.append(accuracyMatrix.getNPV() + ",");
+				writer.append(accuracyMatrix.getFPR() + ",");
+				writer.append(accuracyMatrix.getFNR() + ",");
+				writer.append(accuracyMatrix.getFDR() + ",");
+				writer.append(accuracyMatrix.getACC() + ",");
+				writer.append(accuracyMatrix.getF1() + ",");
+				writer.append("\n");
+
+				if (accuracyMatrix.getLabels().contains("duration")) {
+					durationWriter.append(accuracyMatrix.getTPR() + ",");
+					durationWriter.append(accuracyMatrix.getTNR() + ",");
+					durationWriter.append(accuracyMatrix.getPPV() + ",");
+					durationWriter.append(accuracyMatrix.getNPV() + ",");
+					durationWriter.append(accuracyMatrix.getFPR() + ",");
+					durationWriter.append(accuracyMatrix.getFNR() + ",");
+					durationWriter.append(accuracyMatrix.getFDR() + ",");
+					durationWriter.append(accuracyMatrix.getACC() + ",");
+					durationWriter.append(accuracyMatrix.getF1() + ",");
+					durationWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("protocol_type")) {
+					protocolTypeWriter.append(accuracyMatrix.getTPR() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getTNR() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getPPV() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getNPV() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getFPR() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getFNR() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getFDR() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getACC() + ",");
+					protocolTypeWriter.append(accuracyMatrix.getF1() + ",");
+					protocolTypeWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("service")) {
+					serviceWriter.append(accuracyMatrix.getTPR() + ",");
+					serviceWriter.append(accuracyMatrix.getTNR() + ",");
+					serviceWriter.append(accuracyMatrix.getPPV() + ",");
+					serviceWriter.append(accuracyMatrix.getNPV() + ",");
+					serviceWriter.append(accuracyMatrix.getFPR() + ",");
+					serviceWriter.append(accuracyMatrix.getFNR() + ",");
+					serviceWriter.append(accuracyMatrix.getFDR() + ",");
+					serviceWriter.append(accuracyMatrix.getACC() + ",");
+					serviceWriter.append(accuracyMatrix.getF1() + ",");
+					serviceWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("flag")) {
+					flagWriter.append(accuracyMatrix.getTPR() + ",");
+					flagWriter.append(accuracyMatrix.getTNR() + ",");
+					flagWriter.append(accuracyMatrix.getPPV() + ",");
+					flagWriter.append(accuracyMatrix.getNPV() + ",");
+					flagWriter.append(accuracyMatrix.getFPR() + ",");
+					flagWriter.append(accuracyMatrix.getFNR() + ",");
+					flagWriter.append(accuracyMatrix.getFDR() + ",");
+					flagWriter.append(accuracyMatrix.getACC() + ",");
+					flagWriter.append(accuracyMatrix.getF1() + ",");
+					flagWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("source_bytes")) {
+					sourceBytesWriter.append(accuracyMatrix.getTPR() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getTNR() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getPPV() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getNPV() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getFPR() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getFNR() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getFDR() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getACC() + ",");
+					sourceBytesWriter.append(accuracyMatrix.getF1() + ",");
+					sourceBytesWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_bytes")) {
+					destinationBytesWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getACC() + ",");
+					destinationBytesWriter.append(accuracyMatrix.getF1() + ",");
+					destinationBytesWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("land")) {
+					landWriter.append(accuracyMatrix.getTPR() + ",");
+					landWriter.append(accuracyMatrix.getTNR() + ",");
+					landWriter.append(accuracyMatrix.getPPV() + ",");
+					landWriter.append(accuracyMatrix.getNPV() + ",");
+					landWriter.append(accuracyMatrix.getFPR() + ",");
+					landWriter.append(accuracyMatrix.getFNR() + ",");
+					landWriter.append(accuracyMatrix.getFDR() + ",");
+					landWriter.append(accuracyMatrix.getACC() + ",");
+					landWriter.append(accuracyMatrix.getF1() + ",");
+					landWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("wrong_fragment")) {
+					wrongFragmentWriter.append(accuracyMatrix.getTPR() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getTNR() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getPPV() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getNPV() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getFPR() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getFNR() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getFDR() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getACC() + ",");
+					wrongFragmentWriter.append(accuracyMatrix.getF1() + ",");
+					wrongFragmentWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("urgent")) {
+					urgentWriter.append(accuracyMatrix.getTPR() + ",");
+					urgentWriter.append(accuracyMatrix.getTNR() + ",");
+					urgentWriter.append(accuracyMatrix.getPPV() + ",");
+					urgentWriter.append(accuracyMatrix.getNPV() + ",");
+					urgentWriter.append(accuracyMatrix.getFPR() + ",");
+					urgentWriter.append(accuracyMatrix.getFNR() + ",");
+					urgentWriter.append(accuracyMatrix.getFDR() + ",");
+					urgentWriter.append(accuracyMatrix.getACC() + ",");
+					urgentWriter.append(accuracyMatrix.getF1() + ",");
+					urgentWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("hot")) {
+					hotWriter.append(accuracyMatrix.getTPR() + ",");
+					hotWriter.append(accuracyMatrix.getTNR() + ",");
+					hotWriter.append(accuracyMatrix.getPPV() + ",");
+					hotWriter.append(accuracyMatrix.getNPV() + ",");
+					hotWriter.append(accuracyMatrix.getFPR() + ",");
+					hotWriter.append(accuracyMatrix.getFNR() + ",");
+					hotWriter.append(accuracyMatrix.getFDR() + ",");
+					hotWriter.append(accuracyMatrix.getACC() + ",");
+					hotWriter.append(accuracyMatrix.getF1() + ",");
+					hotWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("failed_logins")) {
+					failedLoginsWriter.append(accuracyMatrix.getTPR() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getTNR() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getPPV() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getNPV() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getFPR() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getFNR() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getFDR() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getACC() + ",");
+					failedLoginsWriter.append(accuracyMatrix.getF1() + ",");
+					failedLoginsWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("logged_in")) {
+					loggedInWriter.append(accuracyMatrix.getTPR() + ",");
+					loggedInWriter.append(accuracyMatrix.getTNR() + ",");
+					loggedInWriter.append(accuracyMatrix.getPPV() + ",");
+					loggedInWriter.append(accuracyMatrix.getNPV() + ",");
+					loggedInWriter.append(accuracyMatrix.getFPR() + ",");
+					loggedInWriter.append(accuracyMatrix.getFNR() + ",");
+					loggedInWriter.append(accuracyMatrix.getFDR() + ",");
+					loggedInWriter.append(accuracyMatrix.getACC() + ",");
+					loggedInWriter.append(accuracyMatrix.getF1() + ",");
+					loggedInWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("compromised")) {
+					compromisedWriter.append(accuracyMatrix.getTPR() + ",");
+					compromisedWriter.append(accuracyMatrix.getTNR() + ",");
+					compromisedWriter.append(accuracyMatrix.getPPV() + ",");
+					compromisedWriter.append(accuracyMatrix.getNPV() + ",");
+					compromisedWriter.append(accuracyMatrix.getFPR() + ",");
+					compromisedWriter.append(accuracyMatrix.getFNR() + ",");
+					compromisedWriter.append(accuracyMatrix.getFDR() + ",");
+					compromisedWriter.append(accuracyMatrix.getACC() + ",");
+					compromisedWriter.append(accuracyMatrix.getF1() + ",");
+					compromisedWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("root_shell")) {
+					rootShellWriter.append(accuracyMatrix.getTPR() + ",");
+					rootShellWriter.append(accuracyMatrix.getTNR() + ",");
+					rootShellWriter.append(accuracyMatrix.getPPV() + ",");
+					rootShellWriter.append(accuracyMatrix.getNPV() + ",");
+					rootShellWriter.append(accuracyMatrix.getFPR() + ",");
+					rootShellWriter.append(accuracyMatrix.getFNR() + ",");
+					rootShellWriter.append(accuracyMatrix.getFDR() + ",");
+					rootShellWriter.append(accuracyMatrix.getACC() + ",");
+					rootShellWriter.append(accuracyMatrix.getF1() + ",");
+					rootShellWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("su_attempted")) {
+					suAttemptedWriter.append(accuracyMatrix.getTPR() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getTNR() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getPPV() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getNPV() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getFPR() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getFNR() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getFDR() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getACC() + ",");
+					suAttemptedWriter.append(accuracyMatrix.getF1() + ",");
+					suAttemptedWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("root")) {
+					rootWriter.append(accuracyMatrix.getTPR() + ",");
+					rootWriter.append(accuracyMatrix.getTNR() + ",");
+					rootWriter.append(accuracyMatrix.getPPV() + ",");
+					rootWriter.append(accuracyMatrix.getNPV() + ",");
+					rootWriter.append(accuracyMatrix.getFPR() + ",");
+					rootWriter.append(accuracyMatrix.getFNR() + ",");
+					rootWriter.append(accuracyMatrix.getFDR() + ",");
+					rootWriter.append(accuracyMatrix.getACC() + ",");
+					rootWriter.append(accuracyMatrix.getF1() + ",");
+					rootWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("file_creations")) {
+					fileCreationsWriter.append(accuracyMatrix.getTPR() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getTNR() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getPPV() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getNPV() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getFPR() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getFNR() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getFDR() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getACC() + ",");
+					fileCreationsWriter.append(accuracyMatrix.getF1() + ",");
+					fileCreationsWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("shells")) {
+					shellsWriter.append(accuracyMatrix.getTPR() + ",");
+					shellsWriter.append(accuracyMatrix.getTNR() + ",");
+					shellsWriter.append(accuracyMatrix.getPPV() + ",");
+					shellsWriter.append(accuracyMatrix.getNPV() + ",");
+					shellsWriter.append(accuracyMatrix.getFPR() + ",");
+					shellsWriter.append(accuracyMatrix.getFNR() + ",");
+					shellsWriter.append(accuracyMatrix.getFDR() + ",");
+					shellsWriter.append(accuracyMatrix.getACC() + ",");
+					shellsWriter.append(accuracyMatrix.getF1() + ",");
+					shellsWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("access_files")) {
+					accessFilesWriter.append(accuracyMatrix.getTPR() + ",");
+					accessFilesWriter.append(accuracyMatrix.getTNR() + ",");
+					accessFilesWriter.append(accuracyMatrix.getPPV() + ",");
+					accessFilesWriter.append(accuracyMatrix.getNPV() + ",");
+					accessFilesWriter.append(accuracyMatrix.getFPR() + ",");
+					accessFilesWriter.append(accuracyMatrix.getFNR() + ",");
+					accessFilesWriter.append(accuracyMatrix.getFDR() + ",");
+					accessFilesWriter.append(accuracyMatrix.getACC() + ",");
+					accessFilesWriter.append(accuracyMatrix.getF1() + ",");
+					accessFilesWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("outbound_cmds")) {
+					outboundCMDsWriter.append(accuracyMatrix.getTPR() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getTNR() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getPPV() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getNPV() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getFPR() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getFNR() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getFDR() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getACC() + ",");
+					outboundCMDsWriter.append(accuracyMatrix.getF1() + ",");
+					outboundCMDsWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("is_hot_logins")) {
+					isHotLoginWriter.append(accuracyMatrix.getTPR() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getTNR() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getPPV() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getNPV() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getFPR() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getFNR() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getFDR() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getACC() + ",");
+					isHotLoginWriter.append(accuracyMatrix.getF1() + ",");
+					isHotLoginWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("is_guest_login")) {
+					isGuestLoginWriter.append(accuracyMatrix.getTPR() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getTNR() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getPPV() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getNPV() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getFPR() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getFNR() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getFDR() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getACC() + ",");
+					isGuestLoginWriter.append(accuracyMatrix.getF1() + ",");
+					isGuestLoginWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("connection_count")) {
+					connectionCountWriter.append(accuracyMatrix.getTPR() + ",");
+					connectionCountWriter.append(accuracyMatrix.getTNR() + ",");
+					connectionCountWriter.append(accuracyMatrix.getPPV() + ",");
+					connectionCountWriter.append(accuracyMatrix.getNPV() + ",");
+					connectionCountWriter.append(accuracyMatrix.getFPR() + ",");
+					connectionCountWriter.append(accuracyMatrix.getFNR() + ",");
+					connectionCountWriter.append(accuracyMatrix.getFDR() + ",");
+					connectionCountWriter.append(accuracyMatrix.getACC() + ",");
+					connectionCountWriter.append(accuracyMatrix.getF1() + ",");
+					connectionCountWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("service_count")) {
+					serviceCountWriter.append(accuracyMatrix.getTPR() + ",");
+					serviceCountWriter.append(accuracyMatrix.getTNR() + ",");
+					serviceCountWriter.append(accuracyMatrix.getPPV() + ",");
+					serviceCountWriter.append(accuracyMatrix.getNPV() + ",");
+					serviceCountWriter.append(accuracyMatrix.getFPR() + ",");
+					serviceCountWriter.append(accuracyMatrix.getFNR() + ",");
+					serviceCountWriter.append(accuracyMatrix.getFDR() + ",");
+					serviceCountWriter.append(accuracyMatrix.getACC() + ",");
+					serviceCountWriter.append(accuracyMatrix.getF1() + ",");
+					serviceCountWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("serror_rate")) {
+					serrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					serrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					serrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					serrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					serrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					serrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					serrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					serrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					serrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					serrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("service_serror_rate")) {
+					serviceSerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					serviceSerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					serviceSerrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("rerror_rate")) {
+					rerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					rerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					rerrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("service_rerror_rate")) {
+					serviceRerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					serviceRerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					serviceRerrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("same_service_rate")) {
+					sameServiceRateWriter.append(accuracyMatrix.getTPR() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getTNR() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getPPV() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getNPV() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getFPR() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getFNR() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getFDR() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getACC() + ",");
+					sameServiceRateWriter.append(accuracyMatrix.getF1() + ",");
+					sameServiceRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("diff_service_rate")) {
+					differentServiceRateWriter.append(accuracyMatrix.getTPR() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getTNR() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getPPV() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getNPV() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getFPR() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getFNR() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getFDR() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getACC() + ",");
+					differentServiceRateWriter.append(accuracyMatrix.getF1() + ",");
+					differentServiceRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("service_diff_host_rate")) {
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getTPR() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getTNR() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getPPV() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getNPV() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getFPR() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getFNR() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getFDR() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getACC() + ",");
+					serviceDifferentHostRateWriter.append(accuracyMatrix.getF1() + ",");
+					serviceDifferentHostRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_count")) {
+					destinationHostCountWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostCountWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostCountWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_service_count")) {
+					destinationHostServiceCountWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostServiceCountWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostServiceCountWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_same_service_rate")) {
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostSameServiceRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostSameServiceRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_diff_service_rate")) {
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostDiffServiceRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostDiffServiceRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_same_source_port_rate")) {
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostSameCourcePortRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostSameCourcePortRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_service_diff_host_rate")) {
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostServiceDiffHostRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostServiceDiffHostRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_serror_rate")) {
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostSerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostSerrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_service_serror_rate")) {
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostServiceSerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostServiceSerrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_rerror_rate")) {
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostRerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostRerrorRateWriter.append("\n");
+				}
+
+				if (accuracyMatrix.getLabels().contains("destination_host_service_rerror_rate")) {
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getTPR() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getTNR() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getPPV() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getNPV() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getFPR() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getFNR() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getFDR() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getACC() + ",");
+					destinationHostServiceRerrorRateWriter.append(accuracyMatrix.getF1() + ",");
+					destinationHostServiceRerrorRateWriter.append("\n");
+				}
+
 			}
-			writer.append("\n");
-			writer.append("TPR");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getTPR());
-			}
-			writer.append("\n");
-			writer.append("TNR");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getTNR());
-			}
-			writer.append("\n");
-			writer.append("PPV");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getPPV());
-			}
-			writer.append("\n");
-			writer.append("NPV");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getNPV());
-			}
-			writer.append("\n");
-			writer.append("FPR");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getFPR());
-			}
-			writer.append("\n");
-			writer.append("FNR");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getFNR());
-			}
-			writer.append("\n");
-			writer.append("FDR");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getFDR());
-			}
-			writer.append("\n");
-			writer.append("ACC");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getACC());
-			}
-			writer.append("\n");
-			writer.append("F1");
-			for (AccuracyMatrices accuracyMatrix : accuracyList) {
-				writer.append(",");
-				writer.append("" + accuracyMatrix.getF1());
-			}
+			durationWriter.flush();
+			protocolTypeWriter.flush();
+			serviceWriter.flush();
+			flagWriter.flush();
+			sourceBytesWriter.flush();
+			destinationBytesWriter.flush();
+			landWriter.flush();
+			wrongFragmentWriter.flush();
+			urgentWriter.flush();
+			hotWriter.flush();
+			failedLoginsWriter.flush();
+			loggedInWriter.flush();
+			compromisedWriter.flush();
+			rootShellWriter.flush();
+			suAttemptedWriter.flush();
+			rootWriter.flush();
+			fileCreationsWriter.flush();
+			shellsWriter.flush();
+			accessFilesWriter.flush();
+			outboundCMDsWriter.flush();
+			isHotLoginWriter.flush();
+			isGuestLoginWriter.flush();
+			connectionCountWriter.flush();
+			serviceCountWriter.flush();
+			serrorRateWriter.flush();
+			serviceSerrorRateWriter.flush();
+			rerrorRateWriter.flush();
+			serviceRerrorRateWriter.flush();
+			sameServiceRateWriter.flush();
+			differentServiceRateWriter.flush();
+			serviceDifferentHostRateWriter.flush();
+			destinationHostCountWriter.flush();
+			destinationHostServiceCountWriter.flush();
+			destinationHostSameServiceRateWriter.flush();
+			destinationHostDiffServiceRateWriter.flush();
+			destinationHostSameCourcePortRateWriter.flush();
+			destinationHostServiceDiffHostRateWriter.flush();
+			destinationHostSerrorRateWriter.flush();
+			destinationHostServiceSerrorRateWriter.flush();
+			destinationHostRerrorRateWriter.flush();
+			destinationHostServiceRerrorRateWriter.flush();
+			durationWriter.close();
+			protocolTypeWriter.close();
+			serviceWriter.close();
+			flagWriter.close();
+			sourceBytesWriter.close();
+			destinationBytesWriter.close();
+			landWriter.close();
+			wrongFragmentWriter.close();
+			urgentWriter.close();
+			hotWriter.close();
+			failedLoginsWriter.close();
+			loggedInWriter.close();
+			compromisedWriter.close();
+			rootShellWriter.close();
+			suAttemptedWriter.close();
+			rootWriter.close();
+			fileCreationsWriter.close();
+			shellsWriter.close();
+			accessFilesWriter.close();
+			outboundCMDsWriter.close();
+			isHotLoginWriter.close();
+			isGuestLoginWriter.close();
+			connectionCountWriter.close();
+			serviceCountWriter.close();
+			serrorRateWriter.close();
+			serviceSerrorRateWriter.close();
+			rerrorRateWriter.close();
+			serviceRerrorRateWriter.close();
+			sameServiceRateWriter.close();
+			differentServiceRateWriter.close();
+			serviceDifferentHostRateWriter.close();
+			destinationHostCountWriter.close();
+			destinationHostServiceCountWriter.close();
+			destinationHostSameServiceRateWriter.close();
+			destinationHostDiffServiceRateWriter.close();
+			destinationHostSameCourcePortRateWriter.close();
+			destinationHostServiceDiffHostRateWriter.close();
+			destinationHostSerrorRateWriter.close();
+			destinationHostServiceSerrorRateWriter.close();
+			destinationHostRerrorRateWriter.close();
+			destinationHostServiceRerrorRateWriter.close();
 			writer.flush();
 			writer.close();
 		} else {
@@ -285,7 +888,7 @@ public class Main {
 			}
 		}
 		accuracy = new AccuracyMatrices(TP, TN, FP, FN);
-		accuracy.setLabelsCount(labels.size());
+		accuracy.setLabels(labels);
 
 		return accuracy;
 	}

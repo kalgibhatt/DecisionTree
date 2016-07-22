@@ -17,4 +17,5 @@ public class ProjectProperties {
 	public static boolean printTree;
 	public static int aggregationCount;
 	public static String treeObjectFileName;
+	public static int labelSelectionCount;
 }
